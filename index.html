@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Basic Scene with Environment - A-Frame</title>
+    <title>Hi everybody</title>
     <meta name="description" content="Basic Scene with Environment - A-Frame">
     <script src="js/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>
@@ -21,6 +21,9 @@
         <a-animation attribute="scale" begin="mouseenter" dur="300" to="2.3 2.3 2.3"></a-animation>
         <a-animation attribute="scale" begin="mouseleave" dur="300" to="2 2 2"></a-animation>
       </a-box>
+        
+      <a-entity light="type: point; intensity: 1; distance: 50; decay: 2"
+          position="15 5 -5"></a-entity>
 
       <a-text value="I need to be more asian!" color="#FAFAFA" position="-1.5 0.2 -3" scale="1.5 1.5 1.5"></a-text>
       
