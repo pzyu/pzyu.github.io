@@ -80,7 +80,7 @@
                 </a-cylinder>
             </a-entity>
             
-            <a-entity id="scene_portals">
+            <a-entity id="scene_portals" visible="false">
                 <!--Background and lights-->
                 <a-light type="directional" color="#fff" intensity="0.2" position="-1 2 1"></a-light>
                 <a-light type="ambient" color="#fff"></a-light>
@@ -177,7 +177,7 @@
                     <a-animation attribute="fusing" begin="fusing" from="1 1 1" to="0.1 0.1 0.1" dur="1500"></a-animation>
                 </a-cursor>
                 
-                <a-plane id="transition" position="0 0 -0.1" color="black" material="opacity: 1">
+                <a-plane id="transition" position="0 0 -0.1" color="black" material="opacity: 0">
                     <a-animation id="transitionAnimation" attribute="material.opacity" begin="fade" from="1" to="0" delay="0" dur="1000" direction="alternate"></a-animation>
                 </a-plane>
                 
