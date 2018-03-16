@@ -2,11 +2,10 @@
 AFRAME.registerComponent('cursor-listener', {
     init: function () {
         this.el.addEventListener('click', function (evt) {
-            //console.log('I was clicked at: ', evt.detail.intersection.point);
-            //var test = document.querySelector("#image-360");
-            //test.setAttribute("src", "#sechelt");
-            //console.log(evt.detail.target.getAttribute("data-dest"));
-            transition(evt.detail.target.getAttribute("data-link-to"));
+            if (isValidGridPoint(evt.detail.cursorEl.id)) {
+                gridReferences.push(evt.detail.cursorEl);   
+            }
+            //transition(evt.detail.target.getAttribute("data-link-to"));
         });
     }
 });
@@ -14,6 +13,7 @@ AFRAME.registerComponent('cursor-listener', {
 var mouseDownTimeout = 1000;
 var currentMouseStatus = false;
 var isMouseDown = false;
+var imgData;
 
 AFRAME.registerComponent('mousedown-check', {
     dependencies: ['raycaster'],
@@ -34,24 +34,37 @@ AFRAME.registerComponent('mousedown-check', {
         this.el.addEventListener('mouseup', function (evt) {
             currentMouseStatus = false;
             mainCamera.getAttribute('wasd-controls').moveTowards = false;
+            
+            setTimeout(function() {
+                // Only check if photo is valid on cursor up
+                if (gridReferences.length > 0 && isValidPhoto()) {
+                    console.log ("Valid photo!");
+                    fadeInAndOut();
+                    var test = document.querySelector('a-scene').components.screenshot.getCanvas('perspective');
+                    
+                    imgData = test.getContext("2d").getImageData(0, 0, test.width, test.height);
+                    myCanvas.putImageData(imgData, 0, 0);
+                } else {
+                    console.log("Invalid!");
+                }
+            }, 100);
         });
     }
 });
 
-// Raycaster
-AFRAME.registerComponent('collider-check', {
-  dependencies: ['raycaster'],
+var myCanvas; 
+
+AFRAME.registerComponent('draw-canvas-rectangles', {
+  schema: {type: 'selector'},
 
   init: function () {
-//    this.el.addEventListener('raycaster-intersected', function (evt) {
-//      console.log(evt.detail.target);
-//    });
+    var canvas = this.canvas = this.data;
+    myCanvas = this.ctx = canvas.getContext('2d');
   }
 });
 
 // Global so we don't need to keep querying
 var transitionPlane;
-var transitionDuration;
 var currentScene = "#scene_landing";
 var mainCamera;
 
@@ -61,11 +74,42 @@ window.onload = function (e) {
     mainCamera = document.querySelector("#camera");
     // Offset with some delay otherwise value will get overriden before it's complete
     transitionDuration = 500;
-    
     setTimeout(fadeOut, 100);
-    if (getPageName() == "index.html") {
-        hideScene("#scene_portals");
+}
+
+var gridPoints = ["#leftTop", "#leftMiddle", "#leftBottom", "#centerTop", "#centerMiddle", "#centerBottom", "#rightTop", "#rightMiddle", "#rightBottom"];
+var gridReferences = [];
+
+function isValidPhoto() {
+    var isValid = true;
+    var currentPos = "";
+    for (index in gridReferences) {
+        if (currentPos == "") {
+            currentPos = gridReferences[index].id[0];
+        } else if (currentPos != gridReferences[index].id[0]) {
+            isValid = false;
+            break;
+        }
     }
+    
+    if (gridReferences.length == 0) {
+        isValid = false;
+    }
+    
+    for (index in gridReferences) {
+        if (!isValid) {
+            gridReferences[index].emit('failure');
+        } else {
+            gridReferences[index].emit('success');
+        }
+    }
+    
+    gridReferences.length = 0;
+    return isValid;
+}
+
+function isValidGridPoint(element) {
+    return gridPoints.indexOf("#" + element) > -1;
 }
 
 function getPageName() {
@@ -75,7 +119,6 @@ function getPageName() {
 
 // Fade will toggle between fade out and fade in
 function fadeOut() {
-    console.log("fadeout");
     transitionPlane.emit('fadeOut');
 }
 
@@ -87,21 +130,20 @@ function fadeIn() {
 
 function fadeInAndOut() {
     fadeIn();
-    setTimeout(fadeOut, 500);
+    setTimeout(fadeOut, 400);
 }
 
 // Fades out and fades in
 function transition(destinationScene) {
-    fadeIn();
+    fadeOut();
     setTimeout(function () {
         resetCamera();
-        fadeOut();
+        fadeIn();
         hideScene(currentScene);
         showScene(destinationScene);
         currentScene = destinationScene;
     }, transitionDuration);
 }
-
 
 // Hides a scene given sceneId
 function hideScene(sceneId) {
