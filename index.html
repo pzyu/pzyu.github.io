@@ -165,11 +165,11 @@
             </a-entity>
             
             <a-camera id="camera">
-                <a-cursor mousedown-check id="cursor" color="#000" raycaster="objects: .clickable">
+                <a-entity cursor="fuse: false" mousedown-check id="cursor" color="#000" raycaster="objects: .clickable">
                     <a-animation attribute="material.color" begin="mouseenter" from="#000" to="#00ff00" dur="100"></a-animation>
                     <a-animation attribute="material.color" begin="mouseleave" from="#00ff00" to="#000" dur="100"></a-animation>
                     <a-animation attribute="scale" begin="click" from="0.1 0.1 0.1" to="1 1 1" dur="150"></a-animation>
-                </a-cursor>
+                </a-entity>
                 
                 <a-plane id="transition" position="0 0 -0.1" material="shader: flat" color="white" material="opacity: 0">
                     <a-animation attribute="material.opacity" begin="fadeOut" from="1" to="0" delay="0" dur="200"></a-animation>
