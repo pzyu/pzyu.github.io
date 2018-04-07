@@ -1,5 +1,6 @@
 window.addEventListener('vrdisplayactivate', function (evt) {
     console.log("vrdisplayactivate");
+    document.querySelector('a-scene').enterVR();
 });
 
 // Add listener to models
@@ -98,6 +99,7 @@ window.onload = function (e) {
     setTimeout(fadeOut, 100);
     
     setTimeout(setPosition, 1000);
+    document.querySelector('a-scene').enterVR();
 }
 
 function setPosition() {

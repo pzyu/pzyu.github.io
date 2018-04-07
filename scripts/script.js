@@ -1,3 +1,8 @@
+window.addEventListener('vrdisplayactivate', function (evt) {
+    console.log("vrdisplayactivate");
+    document.querySelector('a-scene').enterVR();
+});
+
 // Add listener to models
 AFRAME.registerComponent('cursor-listener', {
     init: function () {
@@ -66,6 +71,8 @@ window.onload = function (e) {
     if (getPageName() == "index.html") {
         hideScene("#scene_portals");
     }
+    
+    document.querySelector('a-scene').enterVR();
 }
 
 function getPageName() {
