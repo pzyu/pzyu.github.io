@@ -1,7 +1,3 @@
-window.addEventListener('vrdisplayactivate', function() {
-    console.log("vrdisplayactivate");
-});
-
 // Add listener to models
 AFRAME.registerComponent('cursor-listener', {
     init: function () {
