@@ -1,0 +1,20 @@
+General:
+    Green/red vignette
+
+Index:
+    Signboard
+    Link traversal
+    Reposition
+    Remove back to main
+    
+ROT:
+    Visual grid
+    Middle of the line
+    Collider sizes
+    
+Framing:
+    Checking bug
+    Frustum
+    
+Angles:
+    

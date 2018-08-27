@@ -1,0 +1,77 @@
+html, body {
+    height: 100%;
+}
+
+@media(min-width:768px) {
+    .navbar {
+        padding: 20px 0;
+        -webkit-transition: background .5s ease-in-out, padding .5s ease-in-out;
+        -moz-transition: background .5s ease-in-out, padding .5s ease-in-out;
+        transition: background .5s ease-in-out, padding .5s ease-in-out;
+    }
+    
+    .top-nav-collapse {
+        padding: 0px;
+    }
+}
+
+.intro-section {
+    height: 100%;
+    padding-top: 150px;
+    text-align: center;
+}
+
+.portfolio-section {
+    height: 100%;
+    padding-top: 100px;
+    text-align: center;
+}
+
+.contact-section {
+    height: 100%;
+    padding-top: 100px;
+}
+
+.contact-section .title {
+    text-align: center;
+}
+
+.contact-section .form-group {
+    text-align: left;
+}
+
+#alertContact {
+    position: fixed;
+    top: 90%;
+    left: 68%;
+    width: 30%;
+}
+
+.fade {
+    opacity: 0;
+    -webkit-transition: opacity 0.15s linear;
+    -moz-transition: opacity 0.15s linear;
+    -o-transition: opacity 0.15s linear;
+    transition: opacity 0.15s linear;
+}
+
+.fade.in {
+    opacity: 1;
+}
+
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, .5) !important;
+}
+
+.img-profile {
+    width: 80%;
+    height: 80%;
+}
+
+.thumbnail {
+    cursor: pointer;
+}
+
+#requiredField {
+    color: #d9230f;
+}

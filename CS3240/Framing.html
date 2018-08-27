@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Framing</title>
+    <meta name="description" content="Hello, World! - A-Frame">
+    <script src="scripts/aframe-v0.7.0.js"></script>
+    <script src="scripts/aframe-extras.js"></script>
+    <script src="scripts/aframe-look-at-component.min.js"></script>
+    <script src="scripts/script-framing.js"></script>
+
+    <script src="https://rawgit.com/feiss/aframe-environment-component/master/dist/aframe-environment-component.min.js"></script>
+    <script src="https://rawgit.com/protyze/aframe-curve-component/master/dist/aframe-curve-component.min.js"></script>
+    <script src="https://rawgit.com/protyze/aframe-alongpath-component/master/dist/aframe-alongpath-component.min.js"></script>
+</head>
+
+<body>
+    <a-scene>
+        <a-assets>
+            <img id="img_shadow" src="assets/images/radial-shadow-2.png">
+            <img id="thumb_landing" src="assets/images/background.png">
+        </a-assets>
+
+        <a-grid position="0 -0.1 0" static-body></a-grid>
+
+        <!-- Environment -->
+        <a-entity environment="preset: yavapai; playArea: 1; ground: hills;"></a-entity>
+
+        <!-- Sky -->
+        <a-sky color="#AADDF0"></a-sky>
+
+        <a-entity id="camera" camera="userHeight: 1.6" universal-controls kinematic-body="shape:cylinder; radius:0.5" position="0 1.6 -8"
+            rotation="0 180 0">
+            <!--Instructions-->`
+            <a-entity id="instructions" text="wrapCount:30;width:1;align:center;color:#fff;font:mozillavr;value:Take a picture where the cat or the bird is being framed within something!"
+                position="0 0.5 -1" rotation="0 0 0">
+                <a-animation attribute="text.opacity" delay="5000" to="0" dur="1000"></a-animation>
+            </a-entity>
+            
+            <a-entity class="player" geometry="primitive: sphere; radius:0.5" material="transparent: true; opacity:0;" position="0 0.1 0"></a-entity>
+
+            <!--Center grids-->
+            <a-entity cursor="fuse: false" id="centerMiddle" mousedown-check position="0 0 -0.1" geometry="primitive: sphere; radius:0.001" material="color: white; shader: flat; transparent: true; opacity: 0.7"
+                raycaster="objects: .clickable, .gameObject">
+                <a-animation attribute="material.color" begin="mouseenter" from="#fff" to="#00ff00" dur="100"></a-animation>
+                <a-animation attribute="material.color" begin="mouseleave" from="#00ff00" to="#fff" dur="100"></a-animation>
+                <a-animation attribute="material.color" begin="success" from="#ffffff" to="#00ff00" dur="1000" fill="backwards"></a-animation>
+                <a-animation attribute="material.color" begin="failure" from="#ffffff" to="#ff0000" dur="1000" fill="backwards"></a-animation>
+            </a-entity>
+
+            <a-plane id="transition" position="0 0 -0.1" rotation="0 0 0" material="shader: flat" color="white" material="transparent: true; opacity: 0;">
+                <a-animation attribute="material.opacity" begin="fadeOut" from="1" to="0" delay="0" dur="100"></a-animation>
+                <a-animation attribute="material.opacity" begin="fadeIn" from="0" to="1" delay="0" dur="100"></a-animation>
+                
+                <a-animation attribute="material.opacity" begin="successFadeOut" from="0.25" to="0" delay="0" dur="500"></a-animation>
+                <a-animation attribute="material.opacity" begin="successFadeIn" from="0" to="0.25" delay="0" dur="500"></a-animation>
+                            
+                <a-animation attribute="material.color" begin="success" from="#ffffff" to="#00ff00" dur="500"></a-animation>
+                <a-animation attribute="material.color" begin="failure" from="#ffffff" to="#ff0000" dur="500"></a-animation>
+            </a-plane>
+        </a-entity>
+
+        <!--Default portals-->
+            <a-entity class="clickable" cursor-listener data-link-to="#scene_landing" id="portal_rot" scale="0.7 0.7 0.7" position="0 1 -13"
+                link="href: ROT.html; title:Rule of Thirds; image: assets/images/portal_background/forest.jpg" highlightedColor="#24CAFF"></a-entity>
+
+            <a-entity class="clickable" cursor-listener data-link-to="#scene_landing" id="portal_angles" scale="0.7 0.7 0.7" position="2 1 -13"
+                link="href: Angles.html; title:Angles; image: assets/images/portal_background/angles.jpg" highlightedColor="#24CAFF"></a-entity>
+            
+            <a-entity class="clickable" cursor-listener data-link-to="#scene_landing" id="portal_main" scale="0.7 0.7 0.7" position="-2 1 -13"
+                link="href: index.html; title: Go back to main!; image: assets/images/portal_background/forest.jpg" highlightedColor="#24CAFF"></a-entity>
+
+<!--
+        Instructions`
+        <a-image id="Instructions" src="assets/images/framing_example.jpg" position="1.25 2 -2.75" opacity="1" geometry="primitive: plane; height:2; width:3;">
+            <a-entity text="wrapCount:30;width:2.92;align:center;color:#000;font:mozillavr;value:Take a picture where the cat or the bird is being framed by something"
+                position="0 0.6 -0.1" rotation="0 180 0"></a-entity>
+        </a-image>
+-->
+
+        <!--Title-->
+        <!--
+        <a-curvedimage id="title " src="#img_instructions" radius="2" theta-length="24" height="0.5" position="0 2 -2.8" opacity="0.6" rotation="0 50.191 0" geometry="thetaLength:24">
+            <a-entity text="align:center;color:#000;font:mozillavr;value:Framing;width:5" position="0.4 0.117 1.873" rotation="0 -171.77274698022083 0"></a-entity>
+        </a-curvedimage>
+        -->
+
+        <!-- Models -->
+        <a-asset-item id="house" src="assets/models/house_large_burned/scene.gltf"></a-asset-item>
+        <a-asset-item id="bird" src="assets/models/low_poly_bird_animated/scene.gltf"></a-asset-item>
+
+        <!--Collision boxes-->
+        <a-entity class="collidable" geometry="primitive:box" visible="false" position="1.45 1.45 -2.5" scale="4.2 5.0 0.5" static-body></a-entity>
+
+        <a-entity class="collidable" geometry="primitive:box" visible="false" position="-3 1.45 -2.5" scale="1.5 5.0 0.5" static-body></a-entity>
+
+        <a-entity class="collidable" geometry="primitive:box" visible="false" position="3.2 1.45 1.5" scale="0.75 5.0 0.5" static-body></a-entity>
+
+        <a-entity class="collidable" geometry="primitive:box" visible="false" position="0.4 1.45 1.5" scale="1.3 5.0 0.5" static-body></a-entity>
+
+        <a-entity class="collidable" geometry="primitive:box" visible="false" position="-2.5 1.45 1.5" scale="1.90 5.0 0.5" static-body></a-entity>
+
+        <a-entity class="collidable" geometry="primitive:box" visible="false" position="-0.881 0.551 1.5" scale="1.3 2.0 0.5" static-body></a-entity>
+
+        <a-entity class="collidable" geometry="primitive:box" visible="false" position="3.5 1.45 -0.5" scale="0.5 5.0 4.0" static-body></a-entity>
+
+        <a-entity class="collidable" geometry="primitive:box" visible="false" position="-3.5 1.45 -0.5" scale="0.5 5.0 4.0" static-body></a-entity>
+
+        <a-entity class="collidable" geometry="primitive:box" visible="false" position="-1.69 0.041 0.365" scale="3.682 0.428 2.319"
+            static-body></a-entity>
+
+        <a-entity id="frame" class="collidable" geometry="primitive:box" visible="false" position="1.8 1.4 1.5" scale="1.3 4 0.5"></a-entity>
+
+        <a-entity id="frame" class="collidable" geometry="primitive:box" visible="false" position="-0.881 2.138 1.5" scale="1.1 1.1 0.5"></a-entity>
+
+        <a-entity id="frame" class="collidable" geometry="primitive:box" visible="false" position="-1.572 1.2 -2.5" scale="1.3 4 0.5"></a-entity>
+
+        <!-- Rendering models -->
+        <a-entity id="house-entity" scale="2 2 2" gltf-model="#house"> </a-entity>
+        <a-entity id="cat-entity" look-at=".player" position="1.576 0 -0.38" rotation="0 -38.216284935225914 0" scale="0.07 0.07 0.07"
+            mixin="null" gltf-model="assets/models/low_poly_cat/scene.gltf">
+            <a-entity collider-check id="cat-raycaster" raycaster="objects: .collidable, .player; showLine:false;" position="0 0 0" rotation="180 0 0"></a-entity>
+        </a-entity>
+
+        <!-- Setting up animation loop-->
+        <a-curve id="birth-path" curve="closed:true">
+            <a-curve-point position="-6.661 2.485 -6.786" curve-point=""></a-curve-point>
+            <a-curve-point position="-1.561 2.102 -6.786" curve-point=""></a-curve-point>
+            <a-curve-point position="11.476 1.929 -6.311" curve-point=""></a-curve-point>
+            <a-curve-point position="4.247 2.146 7.34" curve-point=""></a-curve-point>
+            <a-curve-point position="-2.741 1.884 7.34" curve-point=""></a-curve-point>
+        </a-curve>
+
+        <a-entity look-at=".player" alongpath="dur:10000;curve:#birth-path;loop:true" id="bird-entity-animated" gltf-model="assets/models/low_poly_bird_animated/scene.gltf"
+            position="-2.741 1.884 7.34" rotation="3.667 -96.2 30.309" scale="0.15 0.15 0.15" animation-mixer>
+            <a-entity collider-check id="bird-raycaster" raycaster="objects: .collidable, .player; showLine:false;" position="0 0 0"
+                rotation="180 0 0"></a-entity>
+        </a-entity>
+    </a-scene>
+</body>
+
+</html>
