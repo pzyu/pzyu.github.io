@@ -1,16 +1,21 @@
 'use strict';
 
 // Location of data files
-const trialsFile = "./data/experiments.csv"
+const conditionsFile = "./data/experiments.csv"
 const menuL1File = "./data/menu_depth_1.csv"
 const menuL2File = "./data/menu_depth_2.csv"
 const menuL3File = "./data/menu_depth_3.csv"
 
 // Global variables
 var menu;
-var trialsData = [];
-var numTrials = 0;
+var conditionsData = [];
+var numConditions = 0;
+var currentCondition = 1;
+var numTrials = 3;
 var currentTrial = 1;
+var targetItem;
+var isTrialCompleted = false;
+var isConditionCompleted = false;
 var markingMenuL1 = [];
 var markingMenuL2 = [];
 var markingMenuL3 = [];
@@ -22,123 +27,146 @@ var tracker = new ExperimentTracker();
 var markingMenuSubscription = null;
 var radialMenuSvg = null;
 
+var instructions = "Please select: ";
 
+var radialHintMouse = "<u>Radial Menu Usage:</u>" +
+    "\n1.) <b>Click</b> the <b>Right Mouse Button</b> to see a list of items you can select." +
+    "\n2.) <b>Click</b> on the item with the <b>Left Mouse Button</b> to select it.";
 
+var markingHintMouse = "<u>Marking Menu Usage:</u>" +
+    "\n1.) <b>Hold down</b> the <b>Left Mouse Button</b> to see a list of items you can select." +
+    "\n2.) <b>Hover</b> over the item while the button is pressed and <b>release</b> to select it." +
+    "\n3.) You can also perform a fast select by executing the same marking gesture quickly.";
 
 
 // Load CSV files from data and return text
 function getData(relativePath) {
-	var xmlHttp = new XMLHttpRequest();
-	xmlHttp.open("GET", relativePath, false);
-	xmlHttp.send(null);
-	return xmlHttp.responseText;
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", relativePath, false);
+    xmlHttp.send(null);
+    return xmlHttp.responseText;
 }
 
 
 // Loads the CSV data files on page load and store it to global variables
 function initExperiment() {
 
-	// Get Trails
-	var data = getData(trialsFile);
+    // Get Trails
+    var data = getData(conditionsFile);
 
-	var records = data.split("\n");
-	numTrials = records.length - 1;
-	for (var i = 1; i <= numTrials; i++) {
-		var cells = records[i].split(",");
-		var menuType = cells[0].trim();
-		var menuDepth = cells[1].trim();
-		var targetItem = cells[2].trim();
-		trialsData[i] = {
-			'Menu Type': menuType,
-			'Menu Depth': menuDepth,
-			'Target Item': targetItem
-		};
-	}
+    var records = data.split("\n");
+    numConditions = records.length - 1;
+    for (var i = 1; i < numConditions; i++) {
+        var cells = records[i].split(",");
+        var menuType = cells[0].trim();
+        var menuDepth = cells[1].trim();
+        var targetItem = cells[2].trim();
+        var technique = cells[3].trim();
+        conditionsData[i] = {
+            'Menu Type': menuType,
+            'Menu Depth': menuDepth,
+            'Target Item': targetItem,
+            'Technique': technique
+        };
+    }
 
-	// Get Menus
-	var menuL1Data = getData(menuL1File);
-	var menuL2Data = getData(menuL2File);
-	var menuL3Data = getData(menuL3File);
-	
-	// Format CSV Menu to respective Menu structures
-	markingMenuL1 = formatMarkingMenuData(menuL1Data);
-	markingMenuL2 = formatMarkingMenuData(menuL2Data);
-	markingMenuL3 = formatMarkingMenuData(menuL3Data);
-	radialMenuL1 = formatRadialMenuData(menuL1Data);
-	radialMenuL2 = formatRadialMenuData(menuL2Data);
-	radialMenuL3 = formatRadialMenuData(menuL3Data);
-	
-	//Start the first trial
-	nextTrial();
+    // Get Menus
+    var menuL1Data = getData(menuL1File);
+    var menuL2Data = getData(menuL2File);
+    var menuL3Data = getData(menuL3File);
+
+    // Format CSV Menu to respective Menu structures
+    markingMenuL1 = formatMarkingMenuData(menuL1Data);
+    markingMenuL2 = formatMarkingMenuData(menuL2Data);
+    markingMenuL3 = formatMarkingMenuData(menuL3Data);
+    radialMenuL1 = formatRadialMenuData(menuL1Data);
+    radialMenuL2 = formatRadialMenuData(menuL2Data);
+    radialMenuL3 = formatRadialMenuData(menuL3Data);
+
+    //Start the first condition
+    nextCondition();
+    updateNextButton();
+    updateInstructions();
 }
 
-// Wrapper around nextTrial() to prevent click events while loading menus
-function loadNextTrial(e){
-	e.preventDefault();
-	nextTrial();
-	
+// Wrapper around nextcondition() to prevent click events while loading menus
+function loadNextCondition(e) {
+    console.log("Trials: " + currentTrial + " /" + numTrials + " - " + isConditionCompleted);
+    // Only allow clicking of next when current trial is completed
+    if (isConditionCompleted) {
+        currentTrial = 1;
+        isTrialCompleted = false;
+        isConditionCompleted = false;
+        updateNextButton();
+        updateInstructions();
+
+        e.preventDefault();
+        nextCondition();
+    }
 }
 
-// Move to next trai and record events
-function nextTrial() {
-
-	
-	if (currentTrial <= numTrials) {
-
-		var menuType = trialsData[currentTrial]['Menu Type'];
-		var menuDepth = trialsData[currentTrial]['Menu Depth'];
-		var targetItem = trialsData[currentTrial]['Target Item'];
-
-		document.getElementById("trialNumber").innerHTML = String(currentTrial) + "/" + String(numTrials);
-		document.getElementById("menuType").innerHTML = menuType;
-		document.getElementById("menuDepth").innerHTML = menuDepth;
-		document.getElementById("targetItem").innerHTML = targetItem;
-		document.getElementById("selectedItem").innerHTML = "&nbsp;";
-		// Set IV3 state over here
-
-		tracker.newTrial();
-		tracker.trial = currentTrial;
-		tracker.menuType = menuType;
-		tracker.menuDepth = menuDepth;
-		tracker.targetItem = targetItem;
-
-		if (menuType === "Marking") {
-				
-			initializeMarkingMenu();
-			
-			if(menuDepth == 1){
-				menu = MarkingMenu(markingMenuL1, document.getElementById('marking-menu-container'));
-			}
-			else if(menuDepth == 2){
-				menu = MarkingMenu(markingMenuL2, document.getElementById('marking-menu-container'));
-			}else if(menuDepth == 3){
-				menu = MarkingMenu(markingMenuL3, document.getElementById('marking-menu-container'));
-			}
-
-			markingMenuSubscription = menu.subscribe((selection) => markingMenuOnSelect(selection));
-
-		} else if (menuType === "Radial") {
-
-			initializeRadialMenu();			
-			if (menuDepth == 1){
-				menu = createRadialMenu(radialMenuL1);
-			}
-			else if(menuDepth == 2){
-				menu = createRadialMenu(radialMenuL2);
-			}else if(menuDepth == 3){
-				menu = createRadialMenu(radialMenuL3);
-			}
+// Move to next condition and record events
+function nextCondition() {
 
 
-		}
+    if (currentCondition < numConditions) {
+        // Get variables from experiments.csv
+        var menuType = conditionsData[currentCondition]['Menu Type'];
+        var menuDepth = conditionsData[currentCondition]['Menu Depth'];
+        targetItem = conditionsData[currentCondition]['Target Item'];
+        var technique = conditionsData[currentCondition]['Technique'];
 
-		currentTrial++;
-	} else {
-		
-	    var nextButton = document.getElementById("nextButton");
-	    nextButton.innerHTML = "Done";
-		tracker.toCsv();
-	}
+        console.log(conditionsData[currentCondition]);
+
+        updateInstructions();
+        resetSelectedItem();
+
+        // Add condition to tracker
+        tracker.newCondition();
+        tracker.condition = currentCondition;
+        tracker.menuType = menuType;
+        tracker.menuDepth = menuDepth;
+        tracker.targetItem = targetItem;
+        tracker.technique = technique;
+
+        if (menuType === "Marking") {
+
+            initializeMarkingMenu();
+
+            if (menuDepth == 1) {
+                menu = MarkingMenu(markingMenuL1, document.getElementById('marking-menu-container'));
+            } else if (menuDepth == 2) {
+                menu = MarkingMenu(markingMenuL2, document.getElementById('marking-menu-container'));
+            } else if (menuDepth == 3) {
+                menu = MarkingMenu(markingMenuL3, document.getElementById('marking-menu-container'));
+            }
+
+            markingMenuSubscription = menu.subscribe((selection) => markingMenuOnSelect(selection));
+
+            // Set hints
+            document.getElementById("hints").innerHTML = markingHintMouse;
+
+        } else if (menuType === "Radial") {
+
+            initializeRadialMenu();
+            if (menuDepth == 1) {
+                menu = createRadialMenu(radialMenuL1);
+            } else if (menuDepth == 2) {
+                menu = createRadialMenu(radialMenuL2);
+            } else if (menuDepth == 3) {
+                menu = createRadialMenu(radialMenuL3);
+            }
+
+            // Set hints
+            document.getElementById("hints").innerHTML = radialHintMouse;
+        }
+
+        currentCondition++;
+    } else {
+        var nextButton = document.getElementById("nextButton");
+        nextButton.innerHTML = "Done";
+        tracker.toCsv();
+    }
 }
 
 
@@ -148,224 +176,302 @@ function nextTrial() {
 /*Functions related to MarkingMenu*/
 
 // Reconstructs marking menu container
-function initializeMarkingMenu(){
-	
-	//Unload Radial Menu
-	var radialMenuContainer = document.getElementById('radial-menu-container');
-	if(radialMenuContainer != null){
-		radialMenuContainer.parentNode.removeChild(radialMenuContainer);
-	}
-	
-	// Load Marking Menu
-	var interactionContainer = document.getElementById('interaction-container');
-	if (markingMenuSubscription != null) {
-		markingMenuSubscription.unsubscribe();
-	}
-	var markingMenuContainer = document.getElementById('marking-menu-container');
-	if(markingMenuContainer == null){
-		interactionContainer.innerHTML += "<div id=\"marking-menu-container\" style=\"height:100%;width:100%\" onmousedown=\"markingMenuOnMouseDown()\" oncontextmenu=\"preventRightClick(event)\"></div>";
-	}
+function initializeMarkingMenu() {
+
+    //Unload Radial Menu
+    var radialMenuContainer = document.getElementById('radial-menu-container');
+    if (radialMenuContainer != null) {
+        radialMenuContainer.parentNode.removeChild(radialMenuContainer);
+    }
+
+    // Load Marking Menu
+    var interactionContainer = document.getElementById('interaction-container');
+    if (markingMenuSubscription != null) {
+        markingMenuSubscription.unsubscribe();
+    }
+    var markingMenuContainer = document.getElementById('marking-menu-container');
+    if (markingMenuContainer == null) {
+        interactionContainer.innerHTML += "<div id=\"marking-menu-container\" style=\"height:100%;width:100%\" onmousedown=\"markingMenuOnMouseDown()\" oncontextmenu=\"preventRightClick(event)\"></div>";
+    }
 }
 
 //Formats csv menu data in the structure accepted by radial menu
 // Assumes menu csv is sorted by Id and Parent both Ascending
 function formatMarkingMenuData(data) {
-	var records = data.split("\n");
-	var numRecords = records.length;
-	var menuItems = {}
+    var records = data.split("\n");
+    var numRecords = records.length;
+    var menuItems = {}
 
-	// Parse through the records and create individual menu items
-	for (var i = 1; i < numRecords; i++) {
-		var items = records[i].split(',');
-		var id = items[0].trim();
-		var label = items[2].trim();
-		menuItems[id] = {
-			'name': label,
-			'children': []
-		};
-	}
+    // Parse through the records and create individual menu items
+    for (var i = 1; i < numRecords; i++) {
+        var items = records[i].split(',');
+        var id = items[0].trim();
+        var label = items[2].trim();
+        menuItems[id] = {
+            'name': label,
+            'children': []
+        };
+    }
 
-	for (var i = numRecords - 1; i >= 1; i--) {
-		var items = records[i].split(',');
-		var id = items[0].trim();
-		var parent = items[1].trim();
-		if (parent === '0') {
-			continue;
-		} else {
-			var children = menuItems[parent]['children'];
-			children.push(menuItems[id]);
-			delete menuItems[id]
-			menuItems[parent]['children'] = children;
-		}
-	}
+    for (var i = numRecords - 1; i >= 1; i--) {
+        var items = records[i].split(',');
+        var id = items[0].trim();
+        var parent = items[1].trim();
+        if (parent === '0') {
+            continue;
+        } else {
+            var children = menuItems[parent]['children'];
+            children.push(menuItems[id]);
+            delete menuItems[id]
+            menuItems[parent]['children'] = children;
+        }
+    }
 
-	var menuItemsList = [];
-	for (var key in menuItems) {
-		menuItemsList.push(menuItems[key]);
-	}
+    var menuItemsList = [];
+    for (var key in menuItems) {
+        menuItemsList.push(menuItems[key]);
+    }
 
-	return menuItemsList;
+    return menuItemsList;
 }
 
 // Function to start tracking timer on mouse down
-function markingMenuOnMouseDown(){
-
-	tracker.startTimer();
+function markingMenuOnMouseDown() {
+    resetSelectedItem();
+    tracker.startTimer();
 }
 
 //Function to start tracking timer on mouse down
-function markingMenuOnSelect(selectedItem){
+function markingMenuOnSelect(selectedItem) {
+    tracker.trial = currentTrial;
+    //console.log("Target: " + targetItem + " | Selected: " + selectedItem.name);
+    //console.log("Current trial: " + tracker.trial + " attempt: " + tracker.attempt);
 
-	tracker.recordSelectedItem(selectedItem.name);
-	document.getElementById("selectedItem").innerHTML = selectedItem.name;
+    // Only update trial when user has suceeded
+    if (targetItem == selectedItem.name) {
+        document.getElementById("selectedItem").style.backgroundColor = "#5cb85c";
+        addAndUpdateTrial();
+    } else {
+        document.getElementById("selectedItem").style.backgroundColor = "#d9534f";
+    }
+
+
+    tracker.recordSelectedItem(selectedItem.name);
+    document.getElementById("selectedItem").innerHTML = selectedItem.name;
+
+    if (isTrialCompleted) {
+        tracker.newTrial();
+        isTrialCompleted = false;
+    }
 }
 
-function preventRightClick(e){
-	e.preventDefault();
+function preventRightClick(e) {
+    e.preventDefault();
 }
 
+// Function to update trial number 
+function addAndUpdateTrial() {
+    if (currentTrial <= numTrials) {
+        isTrialCompleted = true;
+        console.log("TRIAL: " + currentTrial + " COMPLETED");
+        currentTrial++;
+    } else {
+        isTrialCompleted = false;
+    }
+
+    if (currentTrial > numTrials) {
+        isConditionCompleted = true;
+    } else {
+        isConditionCompleted = false;
+    }
+
+    updateInstructions();
+    updateNextButton();
+
+    //console.log("Trials: " + currentTrial + "/" + numTrials + " - " + isConditionCompleted);
+
+    if (!isConditionCompleted) {
+        //document.getElementById("trialNumber").innerHTML = String(currentTrial) + "/" + String(numTrials);
+    } else {
+        //document.getElementById("trialNumber").innerHTML = "Completed";
+    }
+}
+
+// Function to update Next button 
+function updateNextButton() {
+    document.getElementById("nextButton").disabled = !isConditionCompleted;
+    document.getElementById("interaction-container").style.display = isConditionCompleted ? "none" : "block";
+}
+
+// Function to update instructions 
+function updateInstructions() {
+    // Set instructions
+    var timesCompleted = "<u>" + (numTrials - currentTrial + 1) + "</u> more times";
+    document.getElementById("instructions").innerHTML = instructions + "<b>" + targetItem + "</b> " + timesCompleted;
+}
+
+function resetSelectedItem() {
+    document.getElementById("selectedItem").style.backgroundColor = "#444444";
+    document.getElementById("selectedItem").innerHTML = "&nbsp;"
+}
 
 /*Functions related to RadialMenu*/
 
 // Reconstructs radial menu container
-function initializeRadialMenu(){
-	
-	// Unload Marking Menu
-	if (markingMenuSubscription != null) {
-		markingMenuSubscription.unsubscribe();
-	}
-	var markingMenuContainer = document.getElementById('marking-menu-container');
-	if(markingMenuContainer!=null){
-		markingMenuContainer.parentNode.removeChild(markingMenuContainer);
-	}
-	
-	
+function initializeRadialMenu() {
 
-	// Reload Radial Menu
-	var interactionContainer = document.getElementById('interaction-container');
-	var radialMenuContainer = document.getElementById('radial-menu-container');
-	if(radialMenuContainer == null){
-		interactionContainer.innerHTML += "<div id=\"radial-menu-container\" style=\"height:100%;width:100%\" oncontextmenu=\"toggleRadialMenu(event)\"></div>";
-	}
+    // Unload Marking Menu
+    if (markingMenuSubscription != null) {
+        markingMenuSubscription.unsubscribe();
+    }
+    var markingMenuContainer = document.getElementById('marking-menu-container');
+    if (markingMenuContainer != null) {
+        markingMenuContainer.parentNode.removeChild(markingMenuContainer);
+    }
+
+
+
+    // Reload Radial Menu
+    var interactionContainer = document.getElementById('interaction-container');
+    var radialMenuContainer = document.getElementById('radial-menu-container');
+    if (radialMenuContainer == null) {
+        interactionContainer.innerHTML += "<div id=\"radial-menu-container\" style=\"height:100%;width:100%\" oncontextmenu=\"toggleRadialMenu(event)\"></div>";
+    }
 
 }
 
 // Create radial menu svg element
-function createRadialMenu(radialMenuL){
-	
+function createRadialMenu(radialMenuL) {
+
     var radialmenuElement = document.getElementById('radialmenu');
-    if(radialmenuElement != null){
-    	radialmenuElement.parentNode.removeChild(radialmenuElement);
+    if (radialmenuElement != null) {
+        radialmenuElement.parentNode.removeChild(radialmenuElement);
     }
-	
-	
-	var w = window.innerWidth;
-	var h = window.innerHeight;
-	var radialMenuSvgElement = document.getElementById('radial-menu-svg');
-	if (radialMenuSvgElement != null){
-		radialMenuSvgElement.parentNode.removeChild(radialMenuSvgElement);
-	}
-	radialMenuSvg = d3.select("#radial-menu-container").append("svg").attr("width", w).attr("height", h).attr("id","radial-menu-svg");
-	radialMenuTree = radialMenuL;
-	return radialMenuSvg;
+
+
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+    var radialMenuSvgElement = document.getElementById('radial-menu-svg');
+    if (radialMenuSvgElement != null) {
+        radialMenuSvgElement.parentNode.removeChild(radialMenuSvgElement);
+    }
+    radialMenuSvg = d3.select("#radial-menu-container").append("svg").attr("width", w).attr("height", h).attr("id", "radial-menu-svg");
+    radialMenuTree = radialMenuL;
+    return radialMenuSvg;
 }
 
 // Toggle radial menu on right click
 function toggleRadialMenu(e) {
-	
-	if(tracker.startTime == null){
-	
-		if(radialMenuTree != null){
-				menu = module.exports(radialMenuTree, {
-					x: e.clientX,
-					y: e.clientY
-				}, radialMenuSvg);
-		
-			// Start timing once menu appears
-			tracker.startTimer();
-		}
-	}else{
-		
-		// Record previous item
-		tracker.recordSelectedItem(null);
-		
-		if(radialMenuTree != null){
-			menu = module.exports(radialMenuTree, {
-				x: e.clientX,
-				y: e.clientY
-			}, radialMenuSvg);
-	
-		// Start timing once menu appears
-		tracker.startTimer();
-		}
-	}
-	e.preventDefault();
+
+    if (tracker.startTime == null) {
+
+        if (radialMenuTree != null) {
+            menu = module.exports(radialMenuTree, {
+                x: e.clientX,
+                y: e.clientY
+            }, radialMenuSvg);
+
+            // Start timing once menu appears
+            tracker.startTimer();
+            resetSelectedItem();
+        }
+    } else {
+
+        // Record previous item
+        tracker.recordSelectedItem(null);
+
+        if (radialMenuTree != null) {
+            menu = module.exports(radialMenuTree, {
+                x: e.clientX,
+                y: e.clientY
+            }, radialMenuSvg);
+
+            // Start timing once menu appears
+            tracker.startTimer();
+            resetSelectedItem();
+        }
+    }
+    e.preventDefault();
 }
 
 //Callback for radialmenu when a leaf node is selected
 function radialMenuOnSelect() {
+    tracker.trial = currentTrial;
 
-	tracker.recordSelectedItem(this.id);
-	var radialmenu = document.getElementById('radialmenu');
-	radialmenu.parentNode.removeChild(radialmenu);
-	
-	document.getElementById("selectedItem").innerHTML = this.id;
+    // Only update trial when user has suceeded
+    if (targetItem == this.id) {
+        document.getElementById("selectedItem").style.backgroundColor = "#5cb85c";
+        addAndUpdateTrial();
+    } else {
+        document.getElementById("selectedItem").style.backgroundColor = "#d9534f";
+    }
+
+    tracker.recordSelectedItem(this.id);
+    var radialmenu = document.getElementById('radialmenu');
+    radialmenu.parentNode.removeChild(radialmenu);
+
+    document.getElementById("selectedItem").innerHTML = this.id;
+
+    if (isTrialCompleted) {
+        tracker.newTrial();
+        isTrialCompleted = false;
+    }
 }
 
 //Formats csv menu data in the structure accepted by radial menu
 // Assumes menu csv is sorted by Id and Parent both Ascending
 function formatRadialMenuData(data) {
 
-	var records = data.split("\n");
-	var numRecords = records.length;
-	var menuItems = {}
+    var records = data.split("\n");
+    var numRecords = records.length;
+    var menuItems = {}
 
 
 
-	// Parse through the records and create individual menu items
-	for (var i = 1; i < numRecords; i++) {
-		var items = records[i].split(',');
-		var id = items[0].trim();
-		var label = items[2].trim();
-		menuItems[id] = {
-			'id': label,
-			'fill': "#39d",
-			'name': label,
-			'_children': []
-		};
-	}
+    // Parse through the records and create individual menu items
+    for (var i = 1; i < numRecords; i++) {
+        var items = records[i].split(',');
+        var id = items[0].trim();
+        var label = items[2].trim();
+        menuItems[id] = {
+            'id': label,
+            'fill': "#39d",
+            'name': label,
+            '_children': []
+        };
+    }
 
-	for (var i = numRecords - 1; i >= 1; i--) {
-		var items = records[i].split(',');
-		var id = items[0].trim();
-		var parent = items[1].trim();
-		if (parent === '0') {
-			continue;
-		} else {
-			var _children = menuItems[parent]['_children'];
-			if(menuItems[id]['_children'].length == 0){
-				menuItems[id]['callback'] = radialMenuOnSelect;	
-			}
-			_children.push(menuItems[id]);
-			delete menuItems[id];
-			menuItems[parent]['_children'] = _children;
-		}
-	}
+    for (var i = numRecords - 1; i >= 1; i--) {
+        var items = records[i].split(',');
+        var id = items[0].trim();
+        var parent = items[1].trim();
+        if (parent === '0') {
+            continue;
+        } else {
+            var _children = menuItems[parent]['_children'];
+            if (menuItems[id]['_children'].length == 0) {
+                menuItems[id]['callback'] = radialMenuOnSelect;
+            }
+            _children.push(menuItems[id]);
+            delete menuItems[id];
+            menuItems[parent]['_children'] = _children;
+        }
+    }
 
 
-	var menuItemsList = [];
-	for (var key in menuItems) {
-		if (menuItems[key]['_children'].length == 0){
-			delete menuItems[key]['_children'];
-			menuItems[key]['callback'] = radialMenuOnSelect;
-		} else{
-			delete menuItems[key]['callback'];
-		}
-		menuItemsList.push(menuItems[key]);
-	}
+    var menuItemsList = [];
+    for (var key in menuItems) {
+        if (menuItems[key]['_children'].length == 0) {
+            delete menuItems[key]['_children'];
+            menuItems[key]['callback'] = radialMenuOnSelect;
+        } else {
+            delete menuItems[key]['callback'];
+        }
+        menuItemsList.push(menuItems[key]);
+    }
 
-	return {
-		'_children': menuItemsList
-	};
+    return {
+        '_children': menuItemsList
+    };
 
 }

@@ -509,7 +509,7 @@ input[type="button"].btn-block {
 html,body { height:100%; width: 95vw }
 
 #state-container{
-  height:8%;
+  height:6%;
 }
 .row{
   display:flex;
@@ -547,10 +547,22 @@ html,body { height:100%; width: 95vw }
 	border-color:#f4ad42;
     border-size: 1px;
     border-style: solid;
-    height:92%;;
+    height:80%;
     width:95%;
     position:absolute;
       
+}
+#instructions-container{
+    width:100%;
+    font-size: 120%;
+    color: #000000;
+    text-align: left;
+    white-space: pre-wrap;
+    vertical-align: baseline;
+}
+
+#instructions-container #hints{
+    font-size: 85%;
 }
 
   #radialmenu {

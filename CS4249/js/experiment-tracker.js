@@ -3,12 +3,13 @@ class ExperimentTracker {
 
 
 	constructor() {
-		this.trials = [];
+		this.conditions = [];
 		this.attempt = 0;
-		this.trial = null;
-		this.attempt = null;
+        this.trial = 0;
+		this.condition = null;
 		this.menuType = null;
 		this.menuDepth = null;
+        this.technique = null;
 		this.targetItem = null;
 		this.selectedItem = null;
 		this.startTime = null;
@@ -30,22 +31,29 @@ class ExperimentTracker {
 	}
 
 	stopTimer() {
+		this.attempt++;
+        console.log(this);
 		
 		this.endTime = Date.now();
-		this.trials.push([this.trial, this.attempt, this.menuType, this.menuDepth, this.targetItem, this.selectedItem, this.startTime, this.endTime])
+        var diff = this.endTime - this.startTime;
+		this.conditions.push([this.condition, this.trial, this.attempt, this.menuType, this.menuDepth, this.technique, this.targetItem, this.selectedItem, this.startTime, this.endTime, diff])
 		this.resetTimers();
-		this.attempt++;
 
 	}
 
-	newTrial() {
-		this.attempt = 1;
+	newCondition() {
+		this.trial = 1;
+        this.attempt = 0;
 	}
+    
+    newTrial() {
+        this.attempt = 0;
+    }
 
 	toCsv() {
-		var csvFile = "Trial,Attempt,Menu Type,Menu Depth,Target Item,Selected Item,Start Time, End Time\n";
-		for (var i = 0; i < this.trials.length; i++) {
-			csvFile += this.trials[i].join(',');
+		var csvFile = "Condition,Trial,Attempt,Menu Type,Menu Depth,Technique,Target Item,Selected Item,Start Time, End Time, Time Taken(ms)\n";
+		for (var i = 0; i < this.conditions.length; i++) {
+			csvFile += this.conditions[i].join(',');
 			csvFile += "\n";
 		}
 
