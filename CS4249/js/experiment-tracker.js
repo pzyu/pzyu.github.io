@@ -32,7 +32,6 @@ class ExperimentTracker {
 
 	stopTimer() {
 		this.attempt++;
-        console.log(this);
 		
 		this.endTime = Date.now();
         var diff = this.endTime - this.startTime;

@@ -1,7 +1,7 @@
 'use strict';
 
 // Location of data files
-const conditionsFile = "./data/experiments.csv"
+const conditionsFile = "./data/experimentsRadial.csv"
 const menuL1File = "./data/menu_depth_1.csv"
 const menuL2File = "./data/menu_depth_2.csv"
 const menuL3File = "./data/menu_depth_3.csv"
@@ -16,6 +16,7 @@ var currentTrial = 1;
 var targetItem;
 var isTrialCompleted = false;
 var isConditionCompleted = false;
+var currentCompletion = 0;
 var markingMenuL1 = [];
 var markingMenuL2 = [];
 var markingMenuL3 = [];
@@ -28,6 +29,7 @@ var markingMenuSubscription = null;
 var radialMenuSvg = null;
 
 var instructions = "Please select: ";
+var trialCompletedPrompt = "Please click on the <b>Next</b> button";
 
 var radialHintMouse = "<u>Radial Menu Usage:</u>" +
     "\n1.) <b>Click</b> the <b>Right Mouse Button</b> to see a list of items you can select." +
@@ -56,7 +58,7 @@ function initExperiment() {
 
     var records = data.split("\n");
     numConditions = records.length - 1;
-    for (var i = 1; i < numConditions; i++) {
+    for (var i = 1; i <= numConditions; i++) {
         var cells = records[i].split(",");
         var menuType = cells[0].trim();
         var menuDepth = cells[1].trim();
@@ -109,7 +111,7 @@ function loadNextCondition(e) {
 function nextCondition() {
 
 
-    if (currentCondition < numConditions) {
+    if (currentCondition <= numConditions) {
         // Get variables from experiments.csv
         var menuType = conditionsData[currentCondition]['Menu Type'];
         var menuDepth = conditionsData[currentCondition]['Menu Depth'];
@@ -273,8 +275,9 @@ function preventRightClick(e) {
 function addAndUpdateTrial() {
     if (currentTrial <= numTrials) {
         isTrialCompleted = true;
-        console.log("TRIAL: " + currentTrial + " COMPLETED");
+        
         currentTrial++;
+        currentCompletion++;
     } else {
         isTrialCompleted = false;
     }
@@ -287,27 +290,28 @@ function addAndUpdateTrial() {
 
     updateInstructions();
     updateNextButton();
-
-    //console.log("Trials: " + currentTrial + "/" + numTrials + " - " + isConditionCompleted);
-
-    if (!isConditionCompleted) {
-        //document.getElementById("trialNumber").innerHTML = String(currentTrial) + "/" + String(numTrials);
-    } else {
-        //document.getElementById("trialNumber").innerHTML = "Completed";
-    }
+    
+    var completion = Math.floor(((currentCompletion) / (numTrials * numConditions)) * 100) + "%";
+    document.getElementById("completion").innerHTML = completion;
+    document.getElementById("progressBar").style.width = completion;
 }
 
 // Function to update Next button 
 function updateNextButton() {
     document.getElementById("nextButton").disabled = !isConditionCompleted;
     document.getElementById("interaction-container").style.display = isConditionCompleted ? "none" : "block";
+    document.getElementById("nextButton").style.backgroundColor = isConditionCompleted ? "#f0ad4e" : "#337ab7";
 }
 
 // Function to update instructions 
 function updateInstructions() {
     // Set instructions
-    var timesCompleted = "<u>" + (numTrials - currentTrial + 1) + "</u> more times";
-    document.getElementById("instructions").innerHTML = instructions + "<b>" + targetItem + "</b> " + timesCompleted;
+    if (isConditionCompleted) {
+        document.getElementById("instructions").innerHTML = trialCompletedPrompt;
+    } else {
+        var timesCompleted = "<u>" + (numTrials - currentTrial + 1) + "</u> more times";
+        document.getElementById("instructions").innerHTML = instructions + "<b>" + targetItem + "</b> " + timesCompleted;
+    }
 }
 
 function resetSelectedItem() {

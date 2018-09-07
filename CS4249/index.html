@@ -19,6 +19,12 @@
 </head>
 
 <body onload="initExperiment()">
+    
+    <!-- Progress Div -->
+    <div id="completion">0%</div>
+    <div id="progressBarBackground">
+        <div id="progressBar"></div>
+    </div>
 
     <!-- State Div -->
     <div class="row" id="state-container">
@@ -31,18 +37,16 @@
             <span class="label label-default" id="selectedItem">&nbsp;</span>
         </div>
         <div class="cellnext">
-            <button id="nextButton" type="button" class="btn btn-block btn-primary btn-lg" onclick="loadNextCondition(event)">Next</button>
+            <button id="nextButton" type="button" class="btn btn-block btn-primary btn-lg" onclick="loadNextCondition(event)"><b>Next</b></button>
         </div>
     </div>
     
-
-    
+    <!-- Instructions Div -->
     <div class="row" id="instructions-container">
         <span id="hints">Hints placeholder</span>
     </div>
     
-    <!--  Interaction Div-->
-
+    <!--  Interaction Div -->
     <div class="row" id="interaction-container">
     </div>
 

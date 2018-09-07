@@ -1,0 +1,13 @@
+Poor IVs (Within-subjects, not between-subjects)
+    Color of menu
+    Language of menu
+    Items in the menu
+    Distractions in environment
+    Gender of participant
+    Use of gloves for touch screens
+    
+Poor DVs (Prefer objetive, not subjective, measurable per trial)
+    User preference of menu type
+    User impression of menu performance
+    User opinion of ease of use
+    Learnability

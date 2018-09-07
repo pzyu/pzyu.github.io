@@ -455,7 +455,7 @@ module.exports = (function d3_sunburst_menu(tree, n, container) {
 
     function label(n) {
         var label = n.name || n.id || "";
-        return label.toUpperCase();
+        return label;
     }
 
     /** handy dom attribute setter */
