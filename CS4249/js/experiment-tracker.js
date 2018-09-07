@@ -9,7 +9,7 @@ class ExperimentTracker {
 		this.condition = null;
 		this.menuType = null;
 		this.menuDepth = null;
-        this.technique = null;
+        this.menuBreadth = null;
 		this.targetItem = null;
 		this.selectedItem = null;
 		this.startTime = null;
@@ -35,7 +35,7 @@ class ExperimentTracker {
 		
 		this.endTime = Date.now();
         var diff = this.endTime - this.startTime;
-		this.conditions.push([this.condition, this.trial, this.attempt, this.menuType, this.menuDepth, this.technique, this.targetItem, this.selectedItem, this.startTime, this.endTime, diff])
+		this.conditions.push([this.condition, this.trial, this.attempt, this.menuType, this.menuBreadth, this.menuDepth, this.targetItem, this.selectedItem, this.startTime, this.endTime, diff])
 		this.resetTimers();
 
 	}
@@ -50,7 +50,7 @@ class ExperimentTracker {
     }
 
 	toCsv() {
-		var csvFile = "Condition,Trial,Attempt,Menu Type,Menu Depth,Technique,Target Item,Selected Item,Start Time, End Time, Time Taken(ms)\n";
+		var csvFile = "Condition,Trial,Attempt,Menu Type,Menu Breadth,Menu Depth,Target Item,Selected Item,Start Time, End Time, Time Taken (ms)\n";
 		for (var i = 0; i < this.conditions.length; i++) {
 			csvFile += this.conditions[i].join(',');
 			csvFile += "\n";

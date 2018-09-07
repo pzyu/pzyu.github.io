@@ -1,0 +1,15 @@
+Id,Parent,Label
+1,0,Animals
+2,0,Clothing
+3,1,Mammals
+4,1,Reptiles
+5,2,Tops
+6,2,Bottoms
+7,3,Cats
+8,3,Dogs
+9,4,Lizard
+10,4,Snake
+11,5,T-Shirt
+12,5,Jacket
+13,6,Skirt
+14,6,Leggings

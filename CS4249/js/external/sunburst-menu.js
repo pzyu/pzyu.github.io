@@ -279,7 +279,8 @@ module.exports = (function d3_sunburst_menu(tree, n, container) {
         var cursorData = [];
         if (tree.parent) { // create cursor
             partition.size([2 * Math.PI * (1 - backSize), radius]);
-            rotate = clickLocation[1] + (Math.PI * backSize);
+            //rotate = clickLocation[1] + (Math.PI * backSize);
+            rotate = 0;
             cursorData = [{
                 x: clickLocation[1] - (Math.PI * backSize) - rotate,
                 dx: 2 * (Math.PI * backSize),
@@ -289,7 +290,8 @@ module.exports = (function d3_sunburst_menu(tree, n, container) {
             }];
         } else { // on root level
             partition.size([2 * Math.PI, radius]);
-            rotate = _rotate;
+            //rotate = _rotate;
+            rotate = 0;
         }
 
         // bind tree (argument) to menu
@@ -336,7 +338,7 @@ module.exports = (function d3_sunburst_menu(tree, n, container) {
             })
 
         group.transition()
-            .duration(500)
+            .duration(0)
             //              .delay(function (n,i) {return i*3})
             .ease("elastic")
             .each(function() {

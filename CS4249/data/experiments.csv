@@ -1,7 +1,13 @@
-Menu Type,Menu Depth,Target Item,Technique
-Marking,1,Clothing,Mouse
-Marking,2,Hats,Mouse
-Marking,3,Jeans,Mouse
-Radial,1,Clothing,Touch
-Radial,2,Hats,Touch
-Radial,3,Jeans,Touch
+Menu Type,Menu Depth,Target Item,Menu Breadth
+Marking,1,Clothing,2
+Marking,2,Mammals,2
+Marking,3,Jacket,2
+Marking,1,Animals,4
+Marking,2,Tops,4
+Marking,3,Butter,4
+Radial,1,Animals,2
+Radial,2,Reptiles,2
+Radial,3,Dogs,2
+Radial,1,Continents,4
+Radial,2,Fish,4
+Radial,3,Boots,4
