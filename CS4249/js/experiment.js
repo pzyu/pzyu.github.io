@@ -73,9 +73,11 @@ function changeParticipant(value) {
     // Each set is tested by 2 participants
     participant = value;
     
-    var fileToUse = value <= 4 ? value : Math.floor(value / 2);
+    var fileToUse = value % 4 == 0 ? 4 : value % 4;
     
     currentConditionsFile = conditionsFile + fileToUse + conditionsFileExt;
+    console.log(participant + " using: " + currentConditionsFile);
+    
     initExperiment();
 }
 
