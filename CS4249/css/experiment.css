@@ -626,12 +626,10 @@ body {
 
 #interaction-container {
     border-color: #f4ad42;
-    border-size: 1px;
     border-style: solid;
     height: 75%;
     width: 95%;
     position: absolute;
-    margin-bottom: 0px;
 }
 
 #instructions-container {
@@ -701,7 +699,7 @@ body > svg > text {
 .radial {
     font-size: 24px;
     font-family: sans-serif;
-    fill: #fff;
+    fill: #333;
 }
 
 .btn:focus,

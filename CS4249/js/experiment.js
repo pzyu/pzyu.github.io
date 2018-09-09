@@ -56,7 +56,7 @@ var markingHintMouse = "<u>Usage:</u>" +
 
 // Warning so users don't accidentally refresh page
 window.onbeforeunload = function() {
-    //return true;
+    return true;
 };
 
 // Load CSV files from data and return text
@@ -204,6 +204,8 @@ function nextCondition() {
                     menu = MarkingMenu(markingMenuL3, document.getElementById('marking-menu-container'));
                 }
             }
+            
+            console.log(menu);
 
             markingMenuSubscription = menu.subscribe((selection) => markingMenuOnSelect(selection));
 
@@ -265,7 +267,7 @@ function initializeMarkingMenu() {
     }
     var markingMenuContainer = document.getElementById('marking-menu-container');
     if (markingMenuContainer == null) {
-        interactionContainer.innerHTML += "<div id=\"marking-menu-container\" style=\"height:75%;width:100%\" onmousedown=\"markingMenuOnMouseDown()\" oncontextmenu=\"preventRightClick(event)\"></div>";
+        interactionContainer.innerHTML += "<div id=\"marking-menu-container\" style=\"height:100%;width:100%\" onmousedown=\"markingMenuOnMouseDown()\" oncontextmenu=\"preventRightClick(event)\"></div>";
     }
 }
 
@@ -305,7 +307,7 @@ function formatMarkingMenuData(data) {
     for (var key in menuItems) {
         menuItemsList.push(menuItems[key]);
     }
-
+    
     return menuItemsList;
 }
 
@@ -411,7 +413,7 @@ function initializeRadialMenu() {
     var interactionContainer = document.getElementById('interaction-container');
     var radialMenuContainer = document.getElementById('radial-menu-container');
     if (radialMenuContainer == null) {
-        interactionContainer.innerHTML += "<div id=\"radial-menu-container\" style=\"height:75%;width:100%\" oncontextmenu=\"toggleRadialMenu(event)\"></div>";
+        interactionContainer.innerHTML += "<div id=\"radial-menu-container\" style=\"height:100%;width:100%\" oncontextmenu=\"toggleRadialMenu(event)\"></div>";
     }
 
 }
@@ -438,7 +440,6 @@ function createRadialMenu(radialMenuL) {
 
 // Toggle radial menu on right click
 function toggleRadialMenu(e) {
-
     if (tracker.startTime == null) {
         if (radialMenuTree != null) {
             menu = module.exports(radialMenuTree, {
@@ -510,7 +511,7 @@ function formatRadialMenuData(data) {
         var label = items[2].trim();
         menuItems[id] = {
             'id': label,
-            'fill': "#39d",
+            'fill': "#f2f2f2",
             'name': label,
             '_children': []
         };

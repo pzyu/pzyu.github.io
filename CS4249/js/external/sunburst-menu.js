@@ -557,6 +557,7 @@ module.exports = (function d3_sunburst_menu(tree, n, container) {
         var gradients = d3.select(this.parentNode).append("radialGradient")
             .attr("id", prefix_id("gradient_"))
             .attr("cx", "0%").attr("cy", "0%").attr("fx", "0%").attr("fy", "0%").attr("r", "100%");
+        
         gradients.append("stop").attr("stop-color", function(n) {
                 return fill(n).brighter();
             })
@@ -565,7 +566,7 @@ module.exports = (function d3_sunburst_menu(tree, n, container) {
         gradients.append("stop").attr("stop-color", function(n) {
                 return fill(n);
             })
-            .attr("offset", "100%")
+            .attr("offset", "0%")
             .attr("stop-opacity", "100%");
 
 

@@ -1140,7 +1140,7 @@
         
         ctx.save();
         ctx.strokeStyle = 'none';
-        ctx.fillStyle = pointColor;
+        ctx.fillStyle = 'pointColor';
         ctx.beginPath();
         ctx.moveTo(x + pointRadius, y);
         ctx.arc(x, y, pointRadius, 0, 360);
