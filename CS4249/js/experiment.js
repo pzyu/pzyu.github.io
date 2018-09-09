@@ -71,9 +71,11 @@ function getData(relativePath) {
 function changeParticipant(value) {
     // 4 sets of conditions, but 8 participants
     // Each set is tested by 2 participants
-    participant = Math.floor(value / 2);
+    participant = value;
     
-    currentConditionsFile = conditionsFile + Math.floor(value / 2) + conditionsFileExt;
+    var fileToUse = value < 4 ? value : Math.floor(value / 2);
+    
+    currentConditionsFile = conditionsFile + fileToUse + conditionsFileExt;
     initExperiment();
 }
 
