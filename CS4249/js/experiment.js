@@ -442,8 +442,8 @@ function toggleRadialMenu(e) {
     if (tracker.startTime == null) {
         if (radialMenuTree != null) {
             menu = module.exports(radialMenuTree, {
-                x: e.clientX,
-                y: e.clientY
+                x: e.clientX - 25,
+                y: e.clientY - 200
             }, radialMenuSvg);
 
             // Start timing once menu appears
@@ -457,8 +457,8 @@ function toggleRadialMenu(e) {
 
         if (radialMenuTree != null) {
             menu = module.exports(radialMenuTree, {
-                x: e.clientX,
-                y: e.clientY
+                x: e.clientX - 25,
+                y: e.clientY - 200
             }, radialMenuSvg);
 
             // Start timing once menu appears
