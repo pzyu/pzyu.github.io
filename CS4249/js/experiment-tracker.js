@@ -14,6 +14,8 @@ class ExperimentTracker {
 		this.selectedItem = null;
 		this.startTime = null;
 		this.endTime = null;
+        this.clicks = 0;
+        this.id = null;
 	}
 	
 	resetTimers(){
@@ -32,10 +34,12 @@ class ExperimentTracker {
 
 	stopTimer() {
 		this.attempt++;
+        
+        //console.log(this);
 		
 		this.endTime = Date.now();
         var diff = this.endTime - this.startTime;
-		this.conditions.push([this.condition, this.trial, this.attempt, this.menuType, this.menuBreadth, this.menuDepth, this.targetItem, this.selectedItem, this.startTime, this.endTime, diff])
+		this.conditions.push([this.condition, this.trial, this.attempt, this.menuType, this.menuBreadth, this.menuDepth, this.targetItem, this.selectedItem, this.startTime, this.endTime, diff, this.clicks])
 		this.resetTimers();
 
 	}
@@ -43,6 +47,7 @@ class ExperimentTracker {
 	newCondition() {
 		this.trial = 1;
         this.attempt = 0;
+        this.clicks = 0;
 	}
     
     newTrial() {
@@ -50,7 +55,7 @@ class ExperimentTracker {
     }
 
 	toCsv() {
-		var csvFile = "Condition,Trial,Attempt,Menu Type,Menu Breadth,Menu Depth,Target Item,Selected Item,Start Time, End Time, Time Taken (ms)\n";
+		var csvFile = "Condition,Trial,Attempt,Menu Type,Menu Breadth,Menu Depth,Target Item,Selected Item,Start Time, End Time, Time Taken (ms), Mouse Clicks\n";
 		for (var i = 0; i < this.conditions.length; i++) {
 			csvFile += this.conditions[i].join(',');
 			csvFile += "\n";
@@ -59,7 +64,7 @@ class ExperimentTracker {
 		var hiddenLink = document.createElement('a');
 		hiddenLink.href = 'data:text/csv;charset=utf-8,' + encodeURI(csvFile);
 		hiddenLink.target = '_blank';
-		hiddenLink.download = 'experiment.csv';
+		hiddenLink.download = 'experiment_p' + this.id + '.csv';
 		document.body.appendChild(hiddenLink);
 		hiddenLink.click();
 	}

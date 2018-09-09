@@ -18,8 +18,8 @@
 
 </head>
 
-<body onload="initExperiment()">
-    
+<body>
+
     <!-- Progress Div -->
     <div id="completion">0%</div>
     <div id="progressBarBackground">
@@ -37,15 +37,32 @@
             <span class="label label-default" id="selectedItem">&nbsp;</span>
         </div>
         <div class="cellnext">
-            <button id="nextButton" type="button" class="btn btn-block btn-primary btn-lg" onclick="loadNextCondition(event)"><b>Next</b></button>
+            <button id="nextButton" type="button" class="btn btn-block btn-primary btn-lg" onclick="loadNextCondition(event)" disabled><b>Next</b></button>
         </div>
     </div>
-    
+
     <!-- Instructions Div -->
     <div class="row" id="instructions-container">
-        <span id="hints">Hints placeholder</span>
+        <table style="width:auto;">
+          <tr>
+            <td style="padding-right: 10px" id="hints-header">Select a participant:</td>
+            <td id="hints">
+                <select style="width:100%;" onchange="changeParticipant(value);">
+                    <option value="" disabled selected hidden>Select...</option>
+                    <option value="1">Participant 1</option>
+                    <option value="2">Participant 2</option>
+                    <option value="3">Participant 3</option>
+                    <option value="4">Participant 4</option>
+                    <option value="5">Participant 5</option>
+                    <option value="6">Participant 6</option>
+                    <option value="7">Participant 7</option>
+                    <option value="8">Participant 8</option>
+                </select>  
+            </td>
+          </tr>
+        </table>
     </div>
-    
+
     <!--  Interaction Div -->
     <div class="row" id="interaction-container">
     </div>

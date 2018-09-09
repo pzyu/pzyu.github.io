@@ -1,13 +1,18 @@
 'use strict';
 
 // Location of data files
-const conditionsFile = "./data/experiments.csv"
+const conditionsFile = "./data/experiments_p"
+const conditionsFileExt = ".csv"
+var currentConditionsFile = ""
+
 const menuL1File = "./data/menu_depth_1.csv"
 const menuL2File = "./data/menu_depth_2.csv"
 const menuL3File = "./data/menu_depth_3.csv"
 const menuL1B2File = "./data/menu_depth_1_breadth_2.csv"
 const menuL2B2File = "./data/menu_depth_2_breadth_2.csv"
 const menuL3B2File = "./data/menu_depth_3_breadth_2.csv"
+
+var participant = 0;
 
 // Global variables
 var menu;
@@ -40,15 +45,19 @@ var radialMenuSvg = null;
 var instructions = "Please select: ";
 var trialCompletedPrompt = "Please click on the <b>Next</b> button";
 
-var radialHintMouse = "<u>Radial Menu Usage:</u>" +
+var radialHintMouse = "<u>Usage:</u>" +
     "\n1.) <b>Click</b> the <b>Right Mouse Button</b> to see a list of items you can select." +
     "\n2.) <b>Click</b> on the item with the <b>Left Mouse Button</b> to select it.";
 
-var markingHintMouse = "<u>Marking Menu Usage:</u>" +
+var markingHintMouse = "<u>Usage:</u>" +
     "\n1.) <b>Hold down</b> the <b>Left Mouse Button</b> to see a list of items you can select." +
     "\n2.) <b>Hover</b> over the item while the button is pressed and <b>release</b> to select it." +
     "\n3.) You can also perform a fast select by executing the same marking gesture quickly.";
 
+// Warning so users don't accidentally refresh page
+window.onbeforeunload = function() {
+    //return true;
+};
 
 // Load CSV files from data and return text
 function getData(relativePath) {
@@ -58,12 +67,21 @@ function getData(relativePath) {
     return xmlHttp.responseText;
 }
 
+// Change participant
+function changeParticipant(value) {
+    // 4 sets of conditions, but 8 participants
+    // Each set is tested by 2 participants
+    participant = Math.floor(value / 2);
+    
+    currentConditionsFile = conditionsFile + Math.floor(value / 2) + conditionsFileExt;
+    initExperiment();
+}
 
 // Loads the CSV data files on page load and store it to global variables
 function initExperiment() {
 
     // Get Trails
-    var data = getData(conditionsFile);
+    var data = getData(currentConditionsFile);
 
     var records = data.split("\n");
     numConditions = records.length - 1;
@@ -80,6 +98,10 @@ function initExperiment() {
             'Menu Breadth': menuBreadth
         };
     }
+    
+    document.getElementById("interaction-container").onmousedown = contextMouseDown;
+    
+    tracker.id = participant;
 
     // Get Menus
     var menuL1Data = getData(menuL1File);
@@ -111,9 +133,13 @@ function initExperiment() {
     updateInstructions();
 }
 
+function contextMouseDown() {
+    tracker.clicks++;
+}
+
 // Wrapper around nextcondition() to prevent click events while loading menus
 function loadNextCondition(e) {
-    console.log("Trials: " + currentTrial + " /" + numTrials + " - " + isConditionCompleted);
+    // console.log("Trials: " + currentTrial + " /" + numTrials + " - " + isConditionCompleted);
     // Only allow clicking of next when current trial is completed
     if (isConditionCompleted) {
         currentTrial = 1;
@@ -138,7 +164,7 @@ function nextCondition() {
         var menuBreadth = conditionsData[currentCondition]['Menu Breadth'];
         targetItem = conditionsData[currentCondition]['Target Item'];
 
-        console.log(conditionsData[currentCondition]);
+        // console.log(conditionsData[currentCondition]);
 
         updateInstructions();
         resetSelectedItem();
@@ -178,6 +204,7 @@ function nextCondition() {
             markingMenuSubscription = menu.subscribe((selection) => markingMenuOnSelect(selection));
 
             // Set hints
+            document.getElementById("hints-header").innerHTML = "Marking Menu";
             document.getElementById("hints").innerHTML = markingHintMouse;
 
         } else if (menuType === "Radial") {
@@ -204,20 +231,17 @@ function nextCondition() {
             }
 
             // Set hints
+            document.getElementById("hints-header").innerHTML = "Radial Menu";
             document.getElementById("hints").innerHTML = radialHintMouse;
         }
 
         currentCondition++;
     } else {
         var nextButton = document.getElementById("nextButton");
-        nextButton.innerHTML = "Done";
+        nextButton.innerHTML = "Complete";
         tracker.toCsv();
     }
 }
-
-
-
-
 
 /*Functions related to MarkingMenu*/
 
@@ -237,7 +261,7 @@ function initializeMarkingMenu() {
     }
     var markingMenuContainer = document.getElementById('marking-menu-container');
     if (markingMenuContainer == null) {
-        interactionContainer.innerHTML += "<div id=\"marking-menu-container\" style=\"height:100%;width:100%\" onmousedown=\"markingMenuOnMouseDown()\" oncontextmenu=\"preventRightClick(event)\"></div>";
+        interactionContainer.innerHTML += "<div id=\"marking-menu-container\" style=\"height:75%;width:100%\" onmousedown=\"markingMenuOnMouseDown()\" oncontextmenu=\"preventRightClick(event)\"></div>";
     }
 }
 
@@ -383,7 +407,7 @@ function initializeRadialMenu() {
     var interactionContainer = document.getElementById('interaction-container');
     var radialMenuContainer = document.getElementById('radial-menu-container');
     if (radialMenuContainer == null) {
-        interactionContainer.innerHTML += "<div id=\"radial-menu-container\" style=\"height:100%;width:100%\" oncontextmenu=\"toggleRadialMenu(event)\"></div>";
+        interactionContainer.innerHTML += "<div id=\"radial-menu-container\" style=\"height:75%;width:100%\" oncontextmenu=\"toggleRadialMenu(event)\"></div>";
     }
 
 }

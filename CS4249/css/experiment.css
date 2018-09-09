@@ -581,7 +581,7 @@ input[type="button"].btn-block {
 html,
 body {
     height: 100%;
-    width: 95vw
+    width: 95vw;
 }
 
 #state-container {
@@ -631,6 +631,7 @@ body {
     height: 75%;
     width: 95%;
     position: absolute;
+    margin-bottom: 0px;
 }
 
 #instructions-container {
@@ -640,6 +641,8 @@ body {
     text-align: left;
     white-space: pre-wrap;
     vertical-align: baseline;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 #instructions-container #hints {
