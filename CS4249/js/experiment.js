@@ -47,7 +47,8 @@ var trialCompletedPrompt = "Please click on the <b>Next</b> button";
 
 var radialHintMouse = "<u>Usage:</u>" +
     "\n1.) <b>Click</b> the <b>Right Mouse Button</b> to see a list of items you can select." +
-    "\n2.) <b>Click</b> on the item with the <b>Left Mouse Button</b> to select it.";
+    "\n2.) <b>Click</b> on the item with the <b>Left Mouse Button</b> to select it." + 
+    "\n3.) <b>Click</b> the <b>Right Mouse Button</b> while the menu is open to reset it.";
 
 var markingHintMouse = "<u>Usage:</u>" +
     "\n1.) <b>Hold down</b> the <b>Left Mouse Button</b> to see a list of items you can select." +
