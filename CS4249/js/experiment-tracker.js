@@ -6,7 +6,8 @@ class ExperimentTracker {
 		this.conditions = [];
 		this.attempt = 0;
         this.trial = 0;
-		this.condition = null;
+        this.trialsPerCondition = 3;
+		this.condition = 1;
 		this.menuType = null;
 		this.menuDepth = null;
         this.menuBreadth = null;
@@ -35,7 +36,7 @@ class ExperimentTracker {
 	stopTimer() {
 		this.attempt++;
         
-        //console.log(this);
+        console.log(this);
 		
 		this.endTime = Date.now();
         var diff = this.endTime - this.startTime;
@@ -45,7 +46,15 @@ class ExperimentTracker {
 	}
 
 	newCondition() {
-		this.trial = 1;
+		//this.trial = 1;
+        this.trial++;
+        if (this.trial > this.trialsPerCondition) {
+            console.log("Reset");
+            this.trial = 1;
+            this.condition++;
+        }
+        
+        
         this.attempt = 0;
         this.clicks = 0;
 	}

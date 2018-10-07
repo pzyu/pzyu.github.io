@@ -37,3 +37,6 @@ There were a few changes made to the radial menu for the sake of consistency acr
 Here are a few changes made to the experiment tracker:
 1. Functionality for trials per condition is added.
 2. Additionally tracks: Condition, trial, attempts, menu breadth, and number of mouse clicks.
+
+### Others
+1. A warning shows up when the user tries to refresh the page to prevent accidental navigation away from the interface.

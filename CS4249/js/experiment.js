@@ -19,7 +19,7 @@ var menu;
 var conditionsData = [];
 var numConditions = 0;
 var currentCondition = 1;
-var numTrials = 3;
+var numTrials = 1;
 var currentTrial = 1;
 var targetItem;
 var isTrialCompleted = false;
@@ -57,7 +57,7 @@ var markingHintMouse = "<u>Usage:</u>" +
 
 // Warning so users don't accidentally refresh page
 window.onbeforeunload = function() {
-    return true;
+    //return true;
 };
 
 // Load CSV files from data and return text
@@ -176,7 +176,7 @@ function nextCondition() {
 
         // Add condition to tracker
         tracker.newCondition();
-        tracker.condition = currentCondition;
+        //tracker.condition = currentCondition;
         tracker.menuType = menuType;
         tracker.menuDepth = menuDepth;
         tracker.targetItem = targetItem;
@@ -206,7 +206,7 @@ function nextCondition() {
                 }
             }
             
-            console.log(menu);
+            //console.log(menu);
 
             markingMenuSubscription = menu.subscribe((selection) => markingMenuOnSelect(selection));
 
@@ -320,7 +320,7 @@ function markingMenuOnMouseDown() {
 
 //Function to start tracking timer on mouse down
 function markingMenuOnSelect(selectedItem) {
-    tracker.trial = currentTrial;
+    //tracker.trial = currentTrial;
     //console.log("Target: " + targetItem + " | Selected: " + selectedItem.name);
     //console.log("Current trial: " + tracker.trial + " attempt: " + tracker.attempt);
 
@@ -385,7 +385,7 @@ function updateInstructions() {
         document.getElementById("instructions").innerHTML = trialCompletedPrompt;
     } else {
         var timesCompleted = "<u>" + (numTrials - currentTrial + 1) + "</u> more times";
-        document.getElementById("instructions").innerHTML = instructions + "<b>" + targetItem + "</b> " + timesCompleted;
+        document.getElementById("instructions").innerHTML = instructions + "<b>" + targetItem; //+ "</b> " + timesCompleted;
     }
 }
 
@@ -473,7 +473,7 @@ function toggleRadialMenu(e) {
 
 //Callback for radialmenu when a leaf node is selected
 function radialMenuOnSelect() {
-    tracker.trial = currentTrial;
+    //tracker.trial = currentTrial;
 
     // Only update trial when user has suceeded
     if (targetItem == this.id) {
