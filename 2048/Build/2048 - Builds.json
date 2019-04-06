@@ -4,7 +4,7 @@
 "dataUrl": "2048 - Builds.data.unityweb",
 "wasmCodeUrl": "2048 - Builds.wasm.code.unityweb",
 "wasmFrameworkUrl": "2048 - Builds.wasm.framework.unityweb",
-"TOTAL_MEMORY": 134217728,
+"TOTAL_MEMORY": 268435456,
 "graphicsAPI": ["WebGL 2.0", "WebGL 1.0"],
 "webglContextAttributes": {"preserveDrawingBuffer": false},
 "splashScreenStyle": "Dark",
