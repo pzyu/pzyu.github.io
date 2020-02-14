@@ -122,7 +122,7 @@ function renderPlaces(places) {
 
             const el = ev.detail.intersection && ev.detail.intersection.object.el;
 
-            if (el && el === ev.target) {
+            //if (el && el === ev.target) {
                 const label = document.createElement('span');
                 const container = document.createElement('div');
                 container.setAttribute('id', 'place-label');
@@ -133,7 +133,7 @@ function renderPlaces(places) {
                 setTimeout(() => {
                     container.parentElement.removeChild(container);
                 }, 1500);
-            }
+            //}
         };
 
         icon.addEventListener('click', clickListener);
