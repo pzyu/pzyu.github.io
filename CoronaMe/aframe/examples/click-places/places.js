@@ -83,7 +83,7 @@ function dynamicLoadPlaces(position) {
             return res.json()
                 .then((resp) => {
                     //return resp.response.venues;
-                    console.log(resp);
+                    console.log(resp.data);
 
                     return resp.data;
                 })
@@ -97,13 +97,16 @@ function renderPlaces(places) {
     let scene = document.querySelector('a-scene');
 
     places.forEach((place) => {
-        const latitude = place.location.lat;
-        const longitude = place.location.lng;
+        const latitude = place.lat;
+        const longitude = place.lng;
+        const name = place.age + ', ' + place.gender + ', ' + place.from + ', ' + place.stayed;
+
+        console.log('location: ' + latitude + ', ' + longitude + ' name: ' + name);
 
         // add place icon
         const icon = document.createElement('a-image');
         icon.setAttribute('gps-entity-place', `latitude: ${latitude}; longitude: ${longitude}`);
-        icon.setAttribute('name', place.name);
+        icon.setAttribute('name', name);
         icon.setAttribute('src', '../assets/map-marker.png');
 
         // for debug purposes, just show in a bigger scale, otherwise I have to personally go on places...
