@@ -2,7 +2,7 @@ window.onload = () => {
     let method = 'dynamic';
 
     // if you want to statically add places, de-comment following line
-    method = 'static';
+    //method = 'static';
 
     if (method === 'static') {
         let places = staticLoadPlaces();
@@ -76,11 +76,15 @@ function dynamicLoadPlaces(position) {
         &client_secret=${params.clientSecret}
         &limit=15
         &v=${params.version}`;
+
+    endpoint = 'https://sgwuhan.xose.net/api/'
     return fetch(endpoint)
         .then((res) => {
             return res.json()
                 .then((resp) => {
-                    return resp.response.venues;
+                    //return resp.response.venues;
+
+                    return resp.response.data;
                 })
         })
         .catch((err) => {
