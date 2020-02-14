@@ -42,8 +42,8 @@ function staticLoadPlaces() {
         {
             name: 'Another place name',
             location: {
-                lat: 0,
-                lng: 0,
+                lat: 1.356824,
+                lng: 103.934919,
             }
         }
     ];
