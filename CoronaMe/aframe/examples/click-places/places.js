@@ -83,8 +83,9 @@ function dynamicLoadPlaces(position) {
             return res.json()
                 .then((resp) => {
                     //return resp.response.venues;
+                    console.log(resp);
 
-                    return resp.response.data;
+                    return resp.data;
                 })
         })
         .catch((err) => {
