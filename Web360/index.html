@@ -15,19 +15,41 @@
   <body>
     <!--<a-scene embedded vr-mode-ui="enabled: false">-->
     <a-scene vr-mode-ui="enabled: false">
-      <a-sky src="puydesancy.jpg" rotation="0 -130 0"></a-sky>
 
-      <!--<a-text font="kelsonsans" value="Puy de Sancy, France" width="6" position="-2.5 0.25 -1.5"
-              rotation="0 15 0"></a-text>-->
-          
       <a-assets>
-        <script id="arrow">
-          <a-image src="img/arrow.png" position="${position}" rotation="$rotation"></a-image>
-        </script>
+        <img id="bg1" src="img/bg1.jpg">
+        <img id="bg2" src="img/bg2.jpg">
+        <img id="bg3" src="img/bg3.jpg">
 
+        <img id="city" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/city.jpg">
+        <img id="city-thumb" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/thumb-city.jpg">
+        <img id="cubes-thumb" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/thumb-cubes.jpg">
+        <img id="sechelt-thumb" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/thumb-sechelt.jpg">
+        <audio id="click-sound" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/audio/click.ogg"></audio>
+        <img id="cubes" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/cubes.jpg">
+        <img id="sechelt" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/sechelt.jpg">
+
+        <script id="link" type="text/html">
+          <a-image class="link"
+            event-set__mouseenter="scale: 1.2 1.2 1"
+            event-set__mouseleave="scale: 1 1 1"
+            event-set__click="_target: #image-360; _delay: 300; material.src: ${src}"
+            proxy-event="event: click; to: #image-360; as: fade"
+            sound="on: click; src: #click-sound"></a-image>
+        </script>
       </a-assets>
 
-      <a-entity template="src: #arrow" position="-5 0.25 -5" rotation="0 0 45"></a-entity>
+      <!-- 360-degree image. -->
+      <a-sky id="image-360" radius="10" src="#city"
+             animation__fade="property: components.material.material.color; type: color; from: #FFF; to: #000; dur: 300; startEvents: fade"
+             animation__fadeback="property: components.material.material.color; type: color; from: #000; to: #FFF; dur: 300; startEvents: animationcomplete__fade"></a-sky>
+
+      <!-- Image links. -->
+      <a-entity id="arrow">
+        <a-entity template="src: #link" data-src="#cubes" positon="-1 0 0"></a-entity>
+        <a-entity template="src: #link" data-src="#city" positon="0 0 0"></a-entity>
+        <a-entity template="src: #link" data-src="#sechelt" positon="1 0 0"></a-entity>
+      </a-entity>
 
     </a-scene>
   </body>
