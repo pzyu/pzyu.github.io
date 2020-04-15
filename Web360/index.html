@@ -7,11 +7,13 @@
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
   </head>
   <body>
-    <a-scene>
-      <a-sky src="puydesancy.jpg" rotation="0 -130 0"></a-sky>
+    <div id="content">
+      <a-scene embedded vr-mode-ui="enabled: false">
+        <a-sky src="puydesancy.jpg" rotation="0 -130 0"></a-sky>
 
-      <a-text font="kelsonsans" value="Puy de Sancy, France" width="6" position="-2.5 0.25 -1.5"
-              rotation="0 15 0"></a-text>
-    </a-scene>
+        <!--<a-text font="kelsonsans" value="Puy de Sancy, France" width="6" position="-2.5 0.25 -1.5"
+                rotation="0 15 0"></a-text>-->
+      </a-scene>
+    </div>
   </body>
 </html>
