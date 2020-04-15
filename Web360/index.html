@@ -14,12 +14,14 @@
   </head>
   <body>
     <!--<a-scene embedded vr-mode-ui="enabled: false">-->
-    <a-scene vr-mode-ui="enabled: false">
+    <a-scene vr-mode-ui="enabled: false" cursor="rayOrigin:mouse">
 
       <a-assets>
+        <!--
         <img id="bg1" src="img/bg1.jpg">
         <img id="bg2" src="img/bg2.jpg">
         <img id="bg3" src="img/bg3.jpg">
+        -->
 
         <img id="city" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/city.jpg">
         <img id="city-thumb" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/thumb-city.jpg">
@@ -40,8 +42,6 @@
             sound="on: click; src: #click-sound"></a-image>
         </script>
       </a-assets>
-
-      <a-entity id="camera" camera="userHeight: 1.6" look-controls cursor="rayOrigin: mouse"></a-entity>
 
       <!-- 360-degree image. -->
       <a-sky id="image-360" radius="10" src="#city"
