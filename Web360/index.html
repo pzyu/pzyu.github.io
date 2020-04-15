@@ -38,7 +38,7 @@
             height = "2"
             event-set__mouseenter="scale: 1.1 1.1 1.1"
             event-set__mouseleave="scale: 1 1 1"
-            event-set__click="_target: #image-360; _delay: 1000; material.src: ${bgsrc}"
+            event-set__click="_target: #image-360; _delay: 250; material.src: ${bgsrc}"
             proxy-event="event: click; to: #image-360; as: fade"
             sound="on: click; src: #click-sound"
             look-at="#origin"></a-image>
@@ -47,8 +47,8 @@
 
       <!-- 360-degree image. -->
       <a-sky id="image-360" radius="10" src="#city"
-             animation__fade="property: components.material.material.color; type: color; from: #FFF; to: #000; dur: 1000; startEvents: fade"
-             animation__fadeback="property: components.material.material.color; type: color; from: #000; to: #FFF; dur: 1000; startEvents: animationcomplete__fade"></a-sky>
+        animation__fadein="startEvents: fadein; property: material.opacity; from: 0; to: 1; dur: 1000;"
+        animation__fadeout="startEvents: fadeout; property: material.opacity; from: 1; to: 0; dur: 1000;"></a-sky>
 
       <!-- Image links. -->
       <a-entity id="arrow">
