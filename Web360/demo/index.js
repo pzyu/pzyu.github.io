@@ -8,7 +8,7 @@ const dropRegion = document.querySelector('#drop-region');
 const canvas = createCanvas({
   canvas: document.querySelector('#canvas'),
   // without this, the canvas defaults to full-screen
-  // viewport: [ 20, 20, 500, 256 ]
+  viewport: [ 20, 20, 500, 256 ]
 });
 
 // Get the max image size possible
@@ -24,7 +24,8 @@ image.onload = () => {
   // Setup the 360 viewer
   const viewer = create360Viewer({
     image: image,
-    canvas: canvas
+    canvas: canvas,
+    rotateSpeed = -0.15
   });
 
   setupDragDrop(canvas, viewer);
