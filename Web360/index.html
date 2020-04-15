@@ -31,6 +31,8 @@
 
         <script id="link" type="text/html">
           <a-image class="link"
+            width ="3"
+            height = "1.5"
             event-set__mouseenter="scale: 1.2 1.2 1"
             event-set__mouseleave="scale: 1 1 1"
             event-set__click="_target: #image-360; _delay: 300; material.src: ${src}"
@@ -46,9 +48,9 @@
 
       <!-- Image links. -->
       <a-entity id="arrow">
-        <a-entity template="src: #link" data-src="#cubes" positon="-1 0 0"></a-entity>
-        <a-entity template="src: #link" data-src="#city" positon="0 0 0"></a-entity>
-        <a-entity template="src: #link" data-src="#sechelt" positon="1 0 0"></a-entity>
+        <a-entity template="src: #link" data-src="#cubes" position="-5 0 5"></a-entity>
+        <a-entity template="src: #link" data-src="#city" position="0 0 5"></a-entity>
+        <a-entity template="src: #link" data-src="#sechelt" position="5 0 5"></a-entity>
       </a-entity>
 
     </a-scene>
