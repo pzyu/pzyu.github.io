@@ -4,11 +4,13 @@ const dragDrop = require('drag-drop');
 
 const dropRegion = document.querySelector('#drop-region');
 
+console.log("Loading");
+
 // Get a canvas of some sort, e.g. fullscreen or embedded in a site
 const canvas = createCanvas({
   canvas: document.querySelector('#canvas'),
   // without this, the canvas defaults to full-screen
-  viewport: [ 20, 20, 500, 256 ]
+  viewport: [ 20, 20, 400, 400 ]
 });
 
 // Get the max image size possible
