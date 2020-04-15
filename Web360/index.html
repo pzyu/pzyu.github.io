@@ -1,22 +1,147 @@
-<!--
-    Copyright (C) 2017 Lucas Vieira - All Rights Reserved
-    You may use, distribute and modify this code under the
-    terms of the MIT License.
-    You should have received a copy of the MIT License with
-    this file. If not, please write to: lucas.samuel2002@gmail.com,
-    or visit https://luksamuk.github.io/.
--->
-
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Visualizador 360°</title>
-    <style src="style.css"></style>
-    <script src="three.min.js"></script>
-  </head>
+<html lang="en">
+<head>
+<title>360-viewer</title>
+<meta charset="utf-8">
+<!-- Bootstrap-->
+<link rel="stylesheet" href="js/lib/bootstrap.min.css">
 
-  <body>
-    <script src="panorama.js"></script>
-  </body>
+<style>
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+	position: relative;
+    }
+    body {
+        background-color: #000000;
+        margin: 0;
+        overflow: hidden;
+        font-family: arial;
+	
+    }
+    #container{
+	z-index:1;
+	margin: 0px;
+	padding: 0px;
+	color: white;
+    }
+    .navbar { z-index: 0;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-bottom: 0;
+    font-size: 14px;
+    }
+    #zoomp{
+	top: 48%;
+	left:4%;
+	position: absolute;
+    }
+    #zoomm{
+	top: 52%;
+	left:4%;
+	position: absolute;
+    }
+    #resizef{
+	top: 48%;
+	left:96%;
+	position: absolute;
+	
+    }  
+    #resizes{
+	top: 48%;
+	left:96%;
+	position: absolute;
+	visibility: hidden;
+    }  
+    #autorotateplay{
+	top: 52%;
+	left:96%;
+	position: absolute;
+    }  
+    #autorotatepause{
+	top: 52%;
+	left:96%;
+	position: absolute;
+	visibility: hidden;
+    }
+   
+</style>
+</head>
+<body>
+<!-- bootstrap -->
+<script src="js/lib/jquery-1.11.3.min.js"></script>
+<script src="js/lib/bootstrap.min.js"></script>
+	  
+<!-- navbar-->
+<nav class="navbar navbar-inverse"> 
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+       <ul class="nav navbar-nav navbar-right">
+        
+	<li><a href="#" data-toggle="modal" data-target="#myModal">Help</a></li>
+       </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- help modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Instructions</h4>
+      </div>
+      <div class="modal-body">
+        <h5>Works best on Chrome for desktop.  </h5>
+	<img clas="img-responsive" src="images/instructions.jpg" alt="">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+		
+		 
+<div id='container'>
+
+
+
+<!--resize-->
+<a href="javascript:void(0)" class="btn btn-default btn-sm" id="resizef" onclick='world.fullScreen(0)'><span class="glyphicon glyphicon-resize-full"></span> </a>
+<a href="javascript:void(0)" class="btn btn-default btn-sm" id="resizes" onclick='world.fullScreen(1)'><span class="glyphicon glyphicon-resize-small"></span> </a>
+<!--zoom-->
+<a href="javascript:void(0)" class="btn btn-default btn-sm" id="zoomp" onclick="world.zoom(0)"><span class="glyphicon glyphicon-plus"></span> </a>
+<a href="javascript:void(0)" class="btn btn-default btn-sm"id="zoomm" onclick="world.zoom(1)"><span class="glyphicon glyphicon-minus"></span> </a>
+<!--auto rotate-->
+<a href="javascript:void(0)" class="btn btn-default btn-sm" id="autorotateplay" onclick='world.autoRotate(0)'><span class="glyphicon glyphicon-play"></span> </a>
+<a href="javascript:void(0)" class="btn btn-default btn-sm" id="autorotatepause" onclick='world.autoRotate(1)'><span class="glyphicon glyphicon-pause"></span> </a>
+    </div>
+
+</div>
+<script>
+      window.world = window.world || {};
+      window.onload = function() {
+      world.init();
+      };
+</script>
+           
+	  <!-- javascript graphics library -->
+	  <script src="js/lib/three.min-r79.js"></script>
+	  <!-- to check if your browser supports webgl -->
+	  <script src="js/lib/Detector.js"></script>
+	  <!-- mouse controls to rotate around a fixed axis-->
+	  <script src="js/lib/OrbitControls.js"></script>
+	 <!-- dom events-->
+	  <script src="js/lib/threex.domevents.js"></script>
+	  <script src="js/lib/threex.linkify.js"></script>
+	  <!--animation tween-->
+	  <script src="js/lib/tween.min.js"></script>
+	  <!-- main script-->
+	 <script src="js/main.js"></script>
+	  
+</body>
 </html>
