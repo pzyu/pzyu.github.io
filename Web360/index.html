@@ -41,6 +41,8 @@
         </script>
       </a-assets>
 
+      <a-entity id="camera" camera="userHeight: 1.6" look-controls cursor="rayOrigin: mouse"></a-entity>
+
       <!-- 360-degree image. -->
       <a-sky id="image-360" radius="10" src="#city"
              animation__fade="property: components.material.material.color; type: color; from: #FFF; to: #000; dur: 300; startEvents: fade"
