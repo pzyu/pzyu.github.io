@@ -34,11 +34,11 @@
         <script id="link" type="text/html">
           <a-image class="link"
             src = "${src}"
-            width ="3"
-            height = "1.5"
-            event-set__mouseenter="scale: 1.2 1.2 1"
+            width ="2"
+            height = "2"
+            event-set__mouseenter="scale: 1.1 1.1 1.1"
             event-set__mouseleave="scale: 1 1 1"
-            event-set__click="_target: #image-360; _delay: 300; material.src: ${bg-src}"
+            event-set__click="_target: #image-360; _delay: 300; material.src: ${bgsrc}"
             proxy-event="event: click; to: #image-360; as: fade"
             sound="on: click; src: #click-sound"
             look-at="#origin"></a-image>
@@ -52,9 +52,9 @@
 
       <!-- Image links. -->
       <a-entity id="arrow">
-        <a-entity template="src: #link" data-src="cubes-thumb" data-bg-src="#cubes" position="-5 0 5"></a-entity>
-        <a-entity template="src: #link" data-src="city-thumb" data-bg-src="#city" position="0 0 5"></a-entity>
-        <a-entity template="src: #link" data-src="sechelt-thumb" data-bg-src="#sechelt" position="5 0 5"></a-entity>
+        <a-entity template="src: #link" data-src="cubes-thumb" data-bgsrc="#cubes" position="-5 0 5"></a-entity>
+        <a-entity template="src: #link" data-src="city-thumb" data-bgsrc="#city" position="0 0 5"></a-entity>
+        <a-entity template="src: #link" data-src="sechelt-thumb" data-bgsrc="#sechelt" position="5 0 5"></a-entity>
       </a-entity>
 
       <a-entity id="origin"></a-entity>
