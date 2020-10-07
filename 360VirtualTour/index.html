@@ -1,306 +1,43 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>Hiverlab Virtual Tour</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1.0, user-scalable=no"/>
-
-    <link rel='shortcut icon' type='image/x-icon' href='/favicon.ico' />
-
-
-    <!-- A-frame -->
-    <script src="libraries/aframe/aframe.min.js"></script>
-    <script src="libraries/aframe/aframe-event-set-component.min.js"></script>
-    <script src="libraries/aframe/aframe-look-at-component.min.js"></script>
-
-
-    <!-- Video.js -->
-    <link href="libraries/videojs/video-js.css" rel="stylesheet" />
-
-    <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
-    <script src="libraries/videojs/videojs-ie8.min.js"></script>
-
-    <link rel="stylesheet" href="libraries/fontawesome/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/staticpages.css">
-
-    <link rel="stylesheet" href="libraries/bootstrap/bootstrap.min.css">
-
-    <link rel="stylesheet" href="css/gallery.css">
-    <link rel="stylesheet" href="css/homepage-relizable.css">
-    <link rel="stylesheet" href="css/feedback-relizable.css">
-    <link rel="stylesheet" href="css/scene-relizable.css">
-    <link rel="stylesheet" href="css/instruction-relizable.css">
-    <link rel="stylesheet" href="css/partner.css">
-    <link rel="stylesheet" href="css/min-map.css">
-    <link rel="stylesheet" href="css/weigh.css">
-    
-
-</head>
-
-<body>
-	<!-- Loading -->
-    <div id="loading" style="display: none; position: absolute; height: 100%; width:100%; z-index: 5000; background-color:white; opacity: 1; pointer-events: none;">
-        <div>
-            <img class="huawei-logo" style="z-index: 1" src="images/ui/huawei.png">
-        </div>
-        <div class="container-fluid h-100 p-0">
-            <div class="jumbotron border-0 vertical-center" id="loading-background">
-                <video poster="https://obs.ap-southeast-3.myhuaweicloud.com/hiverlabtest/huawei-virtualtour/ui/loginbg.png" id="fullscreen-video" playsinline autoplay muted loop>
-                    <!-- 
-                        - Video needs to be muted, since Chrome 66+ will not autoplay video with sound.
-                        WCAG general accessibility recommendation is that media such as background video play through only once. Loop turned on for the purposes of illustration; if removed, the end of the video will fade in the same way created by pressing the "Pause" button  -->
-                    <source src="https://obs.ap-southeast-3.myhuaweicloud.com/hiverlabtest/huawei-virtualtour/ui/videos/bg.mp4" type="video/mp4">
-
-                </video>
-
-                <div class="row w-100 mt-n5" style="z-index: 1; color:#444444">
-                    <img src="images/ui/ailab.png" id="loading-logo">
-
-                    <div class="text-center w-100 m-4 pt-4">
-                        <div class="spinner-border" style="width: 4rem; height: 4rem;" role="status">
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                    </div>
-
-                    <h4 class="text-center w-100">
-                        Loading...
-                    </h4>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <!-- Description Box -->
-    <div id="movingbox" style="position:absolute; display:block">
-        <p id="text-description">test</p>
-    </div>
-	
-    <!-- Creating Tour Container -->
-	<div id="creating-tour" class="creating-tour box-visible">
-		<button class="btn" id="creating-back-btn" onclick="#">
-			<img id="creating-back-log" src="/images/assets/back_button.png">
-		</button>
-		
-		<div class="container vertical-center" id="tour-content">
-			<h1 class="ml-3 my-auto" id="creating-title">Creating a new Virtual Tour</h1>
-			<h1 class="ml-3 my-auto" id="provide-title"> Provide details</h1>
-			<form class="form" id="submit-form" onsubmit="event.preventDefault(); checkCreatTourFormAndRedirect();">
-            	<label class="text-left w-100" id="title-tab" for="virtualTourTitle"> Title:</label>
-				<input id="tourTitleField"  class="form-control" placeholder="Enter your project title..." required aria-describedby="titleHelp" maxlength="70" autocomplete="off">
-				
-				<label class="text-left w-100" id="synopsis-tab" for="virtualTourSynopsis"> Synopsis</label>
-				<textarea class="form-control" maxlength="120" required id="synopsisField" rows="3" placeholder="Provide a synopsis for your experience..."></textarea>
-				<label class="text-left w-100" id="number-tab" for="synopsisNumber"> 0/120</label>
-				
-				<div style="text-align: right">
-					<input class="move-btn" id="creating-tour-btn" type="submit" value="Next">
-				</div>
-            </form>
-		</div>
-	</div> 
-	
-	<!-- Editing Tour Main Container -->
-	<div id="editing-tour-container" class="editing-tour box-hidden">
-		<div id="column-container">
-			<div id="menu-container">
-				<div id="hiverlab">
-					<img id="hiverlab-log" src="images/assets/hiverlab_icon.png">
-				</div>
-				<div id="menu-tab">
-					<div id="navigation-tab">
-						<button class="main-menu-btn" id="naviation-btn">
-							<img class="img-fluid" id="naviation-img" src="images/assets/navigation_button.png">
-							<h5 class="main-menu-txt">Navigation</h5>
-						</button>
-					</div>
-					<div id="image-tab">
-						<button class="main-menu-btn" id="image-btn">
-							<img class="img-fluid" id="image-img" src="images/assets/image_button.png">
-							<h5 class="main-menu-txt">Image</h5>
-						</button>
-					</div>
-					<div id="video-tab">
-						<button class="main-menu-btn" id="video-btn">
-							<img class="img-fluid"  id="video-img" src="images/assets/video_button.png">
-							<h5 class="main-menu-txt">Video</h5>
-						</button>
-					</div>
-					
-					<div id="move-container">
-						<button class="move-btn" id="preview-btn" onclick="HideEditingTourPage();" type="submit"> Preview</button>
-						<button class="move-btn" id="publish-btn"> Publish</button>	
-						<button class="move-btn" id="exit-btn"> Exit</button>	
-					</div>	
-				</div>
-			</div>
-			<div id="scene-container">
-				<!--<a-scene embedded vr-mode-ui="enabled: false">-->
-    			<a-scene id="main-scene" vr-mode-ui="enabled: false" cursor="rayOrigin:mouse" log="Scene loaded" renderer="antialias: true">
-    			    <!-- Preloaded Assets -->
-    			    <a-assets>
-						<!-- Buttons -->
-						<img id="arrow-0" crossorigin="anonymous" src="images/assets/navigation_icon.png">
-						
-						<img id="thumbu-image" crossorigin="anonymous" src="images/assets/image_icon.png">
-						
-						<img id="thumbu-video" crossorigin="anonymous" src="images/assets/video_icon.png">
-						
-    			     </a-assets>
-			
-    			    <!-- 360-degree image. -->
-    			    <a-sky geometry="segmentsHeight:256; segmentsWidth:64" material="dithering:100" id="image-360" src="images/backgrounds/entrance_00000.jpg" animation__fade="property: components.material.material.color; type: color; to: black; dur: 450; startEvents: fade" animation__fadeback="property: components.material.material.color; type: color; to: white; dur: 450; delay: 250; startEvents: animationcomplete__fade">
-    			    </a-sky>
-			
-    			    <a-entity id="origin"></a-entity>
-					<a-assets id="scene-assets"></a-assets>
-			
-    			    <!-- Camera -->
-    			    <a-camera id="camera" look-controls wasd-controls-enabled="false" hmdEnabled="false" touchEnabled="true" fov="90"></a-camera>
-    			</a-scene>			
-				
-				<div id="default-veiw-container"></div>
-				<button id="default-view-btn" class="default-view-btn" onclick="OnSetDefaultSceneView();" >Set Default View</button>
-			</div>
-		</div>	
-		<div id="scene-list-container">
-			<div id="add-scene-container">
-				<div class="scene-btn-container">
-					<button class="scene-logo-btn" onclick="ShowAddSceneContainer();" type="submit">
-						<img class="img-fluid scene-logo-img" src="images/assets/add-scene-btn.png" alt="" >
-					</button>
-				</div>
-				<h5 class="scene-titleField">Add Scene</h5>
-			</div>
-			<div id="scene-scroll-container">
-<!--
-				<div class="scene-item-container">
-					<div class="scene-btn-container">
-						<button class="scene-logo-btn" onclick="OnSceneSelect();">
-							<img class="img-fluid scene-logo-img" src="images/assets/1.png" alt="" style="border: 4px solid #FBB03B;">
-						</button>
-						<button class="edit-btn"></button>
-						<button class="delete-btn"></button>
-					</div>
-					<input class="scene-titleField" value="sence-1" maxlength="50"  readonly>
-				</div>
--->
-			</div>
-		</div>
-	</div>
-	
-	<!-- Choose Media Modal -->
-    <div class="partners-overlay please-scroll hidden" id='media-photo-container'>
-		<div id="media-choose-dlg">
-			<div id="media-title-container">
-				<h3 class="media-title-style">Choose 360 Photos</h3>
-			</div>
-			<div id="media-main-container">
-				<div id="media-menu-container">
-					<div class="menu-row">
-						<h3 class="media-title-style">Media Library</h3>
-					</div>
-					<div class="menu-row">
-						<button class="media-menu-btn" id="open-file-btn" onclick="ShowUserPhotos();" type="submit">
-							<img class="media-menu-img" id="open-file-img" src="images/assets/folder.png">
-							<img class="media-menu-img selected-image" id="sel-open-file-img"src="images/assets/folder_selected.png">
-							<h5 class="media-menu-txt" id="open-file-txt">My Files</h5>
-						</button>
-					</div>
-					<div class="menu-row">
-						<button class="media-menu-btn" id="team-btn" onclick="ShowTeamPhotos();" type="submit">
-							<img class="media-menu-img" id="team-img" src="images/assets/share.png">
-							<img class="media-menu-img selected-image" id="sel-team-img" src="images/assets/share_selected.png">
-							<h5 class="media-menu-txt" id="team-txt">Team Hiverlab</h5>
-						</button>
-					</div>
-					<div class="menu-row">
-						<button class="media-menu-btn" id="musketeers-btn" onclick="ShowMusketeerPhotos();" type="submit">
-							<img class="media-menu-img" id="musketeers-img" src="images/assets/share.png">
-							<img class="media-menu-img selected-image" id="sel-musketeers-img" src="images/assets/share_selected.png">
-							<h5 class="media-menu-txt" id="musketeers-txt">The Musketeers</h5>
-						</button>
-					</div>
-					<div class="menu-row">
-						<input id="searchFileField" placeholder="Search...">
-					</div>
-				</div>
-				<div id="media-imgs-container">
-					<div id="media-scroll-container">
-						<div class="row" id="media-grid-container">
-<!--
-							<div class="col-md-4 media-logo">
-								<button class="media-logo-btn" onclick="OnMediaSelect();">
-									<img class="img-fluid media-logo-img" src="images/assets/1.png" alt="" style="border: 4px solid #FBB03B; border-radius: 3px;">
-								</button>
-								<h5 class="media-menu-txt">Filename 1.png</h5>
-								<img class="check-img" src="images/assets/check.png">
-							</div>
--->
-						</div>
-					</div>
-					<button id="upload-btn" onclick="OnUploadFiles();">
-						<img class="media-menu-img"  id="upload-img" src="images/assets/upload.png">
-						<h5 class="media-menu-txt" id="upload-txt">Upload</h5>
-					</button>
-				</div>
-			</div>
-			<div id="media-bottom-container">
-				<button class="move-btn" id="media-next-btn" onclick="AddScene();" type="submit">Next</button>
-			</div>
-		</div>
-	</div>
-
-
-    <!-- Image Container -->
-    <div class="overlay" id='image-container' style='display:none'>
-        <div class="overlay-container">
-            <div id="video-title">
-                <p id="image-description">This is a image title </p>
-            </div>
-
-            <img id='target-image' src='images/backgrounds/conference%20room_00000.jpg' width="100%">
-
-            <div id="close-button">
-                <button class="btn" onclick="HideImageContainer()"></button>
-            </div>
-        </div>
-    </div>
-
-    <div id="overlayName">
-
-        Main Hall
-
-    </div>
-</body>
-
-<script src="libraries/videojs/video.js"></script>
-
-
-<!-- Three.js -->
-<script src="https://cdn.jsdelivr.net/npm/three@0.116.1/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.116.1/examples/js/loaders/GLTFLoader.js"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/three@0.116.1/examples/jsm/controls/OrbitControls.js"></script>
-
-
-<!-- Bootstrap -->
-<script src="libraries/jquery/jquery-3.5.1.min.js"></script>
-<script src="libraries/bootstrap/popper.min.js"></script>
-<script src="libraries/bootstrap/bootstrap.min.js"></script>
-
-<!-- Clipboard -->
-<script src="libraries/clipboard/clipboard.min.js"></script>
-
-
-<script src="js/AppController.js"></script>
-<script src="js/MediaGallery.js"></script>
-<script src="js/LoginController.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.2.228/pdf.min.js"></script>
-<script type="module" src="3dmodels/min-main.js"></script>
-
-</html>
+<!DOCTYPE html> 
+<html> 
+  
+<head> 
+    <title>My Custom Page</title> 
+    <style type="text/css"> 
+        html { 
+            overflow: auto; 
+        } 
+          
+        html, 
+        body, 
+        div, 
+        iframe { 
+            margin: 0px; 
+            padding: 0px; 
+            height: 100%; 
+            border: none; 
+        } 
+          
+        iframe { 
+            display: block; 
+            width: 100%; 
+            border: none; 
+            overflow-y: auto; 
+            overflow-x: hidden; 
+        } 
+    </style> 
+</head> 
+  
+<body> 
+    <iframe src="https://cloudexpo.hiverlab.com/dev/?IntcIml2XCI6XCJXQzRGMnZZWUN4K1hGTFdjSmxoSXBBPT1cIixcInZcIjoxLFwiaXRlclwiOjEwMDAwLFwia3NcIjoxMjgsXCJ0c1wiOjY0LFwibW9kZVwiOlwiY2NtXCIsXCJhZGF0YVwiOlwiXCIsXCJjaXBoZXJcIjpcImFlc1wiLFwic2FsdFwiOlwiSXZaMzNlVE02ak09XCIsXCJjdFwiOlwiUWRIUFErRHB3aU5BSjFHVFhqTThoMEZhOUphbGNNbWQ1aHdNREpPNDhnb0owSStIWGU3OTRhV3F4Um1zdDdkbkFRN2JTKzhXRjZFSnV1YVNQT1JQTWtWU3dpVUFDR01UMEN0NENUc1EzVDgwQTRPTzZ1d29DSlF6QlBmdjZVay94c01rSERKancralFCYlFhOEYwaFh3cnIxMTdwRlp2Z2JSbHZBei9KZ09LejhYY0gwdmlSOWFhTG5wYWg4QlJodkd0ditnL1BRbk82UlE9PVwifSI="
+            frameborder="0" 
+            marginheight="0" 
+            marginwidth="0" 
+            width="100%" 
+            height="100%" 
+            scrolling="auto"> 
+  </iframe> 
+  
+</body> 
+  
+</html> 
